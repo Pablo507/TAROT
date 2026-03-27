@@ -984,3 +984,53 @@ footer {
 @media (max-width: 600px) {
   .tools-grid { grid-template-columns: 1fr; }
 }
+
+/* ─── DYNAMIC RECOMMENDATION HIGHLIGHT ───────────────────────── */
+.dynamic-tool-highlight {
+  margin: 1.5rem 0 2.5rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(168,85,247,0.04));
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 16px;
+  animation: fade-in 1.2s ease both;
+}
+
+.dynamic-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 0.75rem;
+  text-align: left;
+}
+
+.dynamic-text { flex: 1; }
+.dynamic-text h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  color: var(--gold);
+  margin-bottom: 0.4rem;
+}
+.dynamic-text p {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.tool-card.highlight {
+  min-width: 250px;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid var(--gold);
+  box-shadow: 0 0 15px var(--gold-glow);
+  cursor: pointer;
+}
+
+.tool-card.highlight:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px var(--gold);
+}
+
+@media (max-width: 768px) {
+  .dynamic-wrapper { flex-direction: column; text-align: center; }
+  .tool-card.highlight { width: 100%; min-width: unset; }
+}

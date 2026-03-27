@@ -23,6 +23,13 @@ const els = {
   readingDate:    $('reading-date'),
   cardsSummary:   $('cards-summary'),
   offeringPanel:  $('offering-panel'),
+  dynRec:         $('dynamic-recommendation'),
+  dynToolName:    $('dyn-tool-name'),
+  dynToolDesc:    $('dyn-tool-desc'),
+  dynToolLink:    $('dyn-tool-link'),
+  dynToolIcon:    $('dyn-tool-icon'),
+  dynToolCardName:$('dyn-tool-card-name'),
+  dynToolTag:     $('dyn-tool-tag'),
 };
 
 // ─── STARFIELD ────────────────────────────────────────────────
@@ -229,6 +236,47 @@ async function getAIReading(question, cards) {
   return data.reading || 'La voz del oráculo permanece en silencio…';
 }
 
+// ─── DYNAMIC RECOMMENDATION ENGINE ────────────────────────────
+function updateDynamicRecommendation(cards) {
+  const counts = { "Bastos": 0, "Copas": 0, "Espadas": 0, "Pentáculos": 0, "Mayor": 0 };
+
+  cards.forEach(card => {
+    if (card.arcana === "Mayor") {
+      counts["Mayor"]++;
+    } else if (card.suit) {
+      counts[card.suit]++;
+    }
+  });
+
+  // Find the suit with the highest count
+  let dominant = "Mayor";
+  let max = -1;
+
+  // We check suits first, then override with Mayor if it's very high or tied
+  for (const [suit, count] of Object.entries(counts)) {
+    if (count > max) {
+      max = count;
+      dominant = suit;
+    } else if (count === max && suit === "Mayor") {
+      // Tie-breaker: Major Arcana takes precedence for spiritual importance
+      dominant = "Mayor";
+    }
+  }
+
+  const rec = ELEMENT_RECOMMENDATIONS[dominant];
+
+  // Update UI
+  els.dynToolName.textContent = rec.name;
+  els.dynToolDesc.textContent = rec.desc;
+  els.dynToolLink.href = rec.url;
+  els.dynToolIcon.textContent = rec.icon;
+  els.dynToolCardName.textContent = rec.name;
+  els.dynToolTag.textContent = rec.tag;
+
+  // Show the panel
+  els.dynRec.style.display = 'block';
+}
+
 // ─── TYPE-WRITER EFFECT ───────────────────────────────────────
 async function typewriterDisplay(text) {
   els.readingText.innerHTML = '';
@@ -318,6 +366,7 @@ async function onDraw() {
 
     // Reveal monetization/offering panel after reading
     setTimeout(() => {
+      updateDynamicRecommendation(cards);
       els.offeringPanel.style.display = 'block';
       els.offeringPanel.scrollIntoView({ behavior: 'smooth' });
     }, 500);

@@ -665,3 +665,42 @@ const SPREADS = {
     ]
   }
 };
+
+// ─── RECOMENDACIONES DINÁMICAS (MONETIZACIÓN) ─────────────────
+const ELEMENT_RECOMMENDATIONS = {
+  "Espadas": {
+    name: "Incienso de Lavanda",
+    tag: "Claridad Mental",
+    icon: "🌬️",
+    url: "https://amazon.com/lavender-incense-placeholder",
+    desc: "Detectamos una fuerte presencia de Espadas. La Lavanda ayuda a calmar la mente y clarificar tus pensamientos."
+  },
+  "Copas": {
+    name: "Incienso de Jazmín",
+    tag: "Armonía Emocional",
+    icon: "💧",
+    url: "https://amazon.com/jasmine-incense-placeholder",
+    desc: "Tus cartas hablan de profundas emociones. El Jazmín vibra con la energía de las Copas para sanar el corazón."
+  },
+  "Bastos": {
+    name: "Incienso de Sándalo",
+    tag: "Energía y Acción",
+    icon: "🔥",
+    url: "https://amazon.com/sandalwood-incense-placeholder",
+    desc: "La pasión de los Bastos predomina. El Sándalo potencia tu voluntad y protege tus proyectos ambiciosos."
+  },
+  "Pentáculos": {
+    name: "Incienso de Pachulí",
+    tag: "Abundancia y Tierra",
+    icon: "🌿",
+    url: "https://amazon.com/patchouli-incense-placeholder",
+    desc: "La energía de los Pentáculos busca manifestar. El Pachulí ayuda a enraizar tus ambiciones materiales."
+  },
+  "Mayor": {
+    name: "Incienso de Copal",
+    tag: "Conexión Divina",
+    icon: "✨",
+    url: "https://amazon.com/copal-incense-placeholder",
+    desc: "Los Arcanos Mayores dominan tu tirada. El Copal abre los canales para una guía espiritual superior."
+  }
+};
