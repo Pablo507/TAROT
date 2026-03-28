@@ -103,9 +103,9 @@
         </p>
         
         <div class="offering-actions">
-          <a href="https://www.buymeacoffee.com/YOUR_LINK_HERE" target="_blank" class="offering-btn" id="offering-btn">
-            <span class="btn-icon">🪙</span>
-            Realizar Ofrenda (Donar)
+          <a href="https://ko-fi.com/tarotai" target="_blank" class="offering-btn" id="offering-btn">
+            <span class="btn-icon">☕</span>
+            Apoyar el Oráculo (Ko-fi)
           </a>
         </div>
 
@@ -117,40 +117,16 @@
                 <h3 id="dyn-tool-name"></h3>
                 <p id="dyn-tool-desc"></p>
              </div>
-             <a id="dyn-tool-link" href="#" target="_blank" class="tool-card highlight">
+             <div id="dyn-tool-link" class="tool-card highlight">
                 <div class="tool-icon" id="dyn-tool-icon"></div>
                 <div class="tool-info">
                    <span class="tool-name" id="dyn-tool-card-name"></span>
                    <span class="tool-tag" id="dyn-tool-tag"></span>
                 </div>
-             </a>
+             </div>
           </div>
         </div>
 
-        <div class="tools-divider">Instrumentos Generales</div>
-        <div class="tools-grid">
-          <a href="https://amazon.com/tarot-deck-placeholder" target="_blank" class="tool-card">
-            <div class="tool-icon">🃏</div>
-            <div class="tool-info">
-              <span class="tool-name">Tarot Rider-Waite</span>
-              <span class="tool-tag">Mazo Esencial</span>
-            </div>
-          </a>
-          <a href="https://amazon.com/crystals-placeholder" target="_blank" class="tool-card">
-            <div class="tool-icon">💎</div>
-            <div class="tool-info">
-              <span class="tool-name">Amatista Natural</span>
-              <span class="tool-tag">Protección</span>
-            </div>
-          </a>
-          <a href="https://amazon.com/incense-placeholder" target="_blank" class="tool-card">
-            <div class="tool-info">
-              <div class="tool-icon">🕯️</div>
-              <span class="tool-name">Velas de Ritual</span>
-              <span class="tool-tag">Consagración</span>
-            </div>
-          </a>
-        </div>
       </div>
     </section>
 
@@ -166,6 +142,17 @@
   <!-- Scripts -->
   <script src="tarot-data.js"></script>
   <script src="app.js"></script>
+
+  <!-- Ko-fi Widget -->
+  <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+  <script>
+    kofiWidgetOverlay.draw('tarotai', {
+      'type': 'floating-chat',
+      'floating-chat.donateButton.text': 'Support Me',
+      'floating-chat.donateButton.background-color': '#fcbf47',
+      'floating-chat.donateButton.text-color': '#323842'
+    });
+  </script>
 
 </body>
 </html>

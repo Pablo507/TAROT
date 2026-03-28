@@ -268,7 +268,6 @@ function updateDynamicRecommendation(cards) {
   // Update UI
   els.dynToolName.textContent = rec.name;
   els.dynToolDesc.textContent = rec.desc;
-  els.dynToolLink.href = rec.url;
   els.dynToolIcon.textContent = rec.icon;
   els.dynToolCardName.textContent = rec.name;
   els.dynToolTag.textContent = rec.tag;
