@@ -6,9 +6,9 @@
 
 /* ─── CSS VARIABLES ─────────────────────────────────────────── */
 :root {
-  --bg-deep:       #05000f;
-  --bg-mid:        #0d0020;
-  --bg-card:       #110030;
+  --bg-deep:       #150b2b;
+  --bg-mid:        #1f143d;
+  --bg-card:       #291c4f;
   --gold:          #c9a84c;
   --gold-light:    #f0d080;
   --gold-glow:     #ffd70066;
@@ -20,7 +20,7 @@
   --red-dark:      #7f1d1d;
   --text-primary:  #f0e6d3;
   --text-muted:    #8b7d9a;
-  --glass:         rgba(255,255,255,0.04);
+  --glass:         rgba(255,255,255,0.07);
   --glass-border:  rgba(201,168,76,0.2);
   --card-w:        120px;
   --card-h:        200px;
@@ -55,6 +55,8 @@ body {
   position: absolute;
   border-radius: 50%;
   background: white;
+  opacity: var(--base-op, 0.3);
+  box-shadow: 0 0 5px white;
   animation: twinkle var(--dur, 4s) ease-in-out infinite;
   animation-delay: var(--delay, 0s);
 }
@@ -70,9 +72,9 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(107,33,168,0.15) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(13,148,136,0.1) 0%, transparent 60%),
-    radial-gradient(ellipse 100% 60% at 50% 50%, rgba(5,0,15,0.5) 0%, transparent 100%);
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(107,33,168,0.2) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(13,148,136,0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 100% 60% at 50% 50%, rgba(21,11,43,0.3) 0%, transparent 100%);
   pointer-events: none;
   z-index: 0;
 }
@@ -144,6 +146,9 @@ h1 {
   margin-bottom: 2rem;
   position: relative;
   overflow: hidden;
+  box-shadow: 
+    0 10px 40px rgba(0,0,0,0.3),
+    0 0 0 1px rgba(255,255,255,0.05) inset;
 }
 
 .panel::before {
