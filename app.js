@@ -30,6 +30,7 @@ const els = {
   dynToolIcon:    $('dyn-tool-icon'),
   dynToolCardName:$('dyn-tool-card-name'),
   dynToolTag:     $('dyn-tool-tag'),
+  dynamicSchema:  $('dynamic-schema'),
 };
 
 // ─── STARFIELD ────────────────────────────────────────────────
@@ -308,6 +309,41 @@ async function typewriterDisplay(text) {
   });
 }
 
+// ─── STRUCTURED DATA (JSON-LD) ────────────────────────────────
+function updateStructuredData(cards, reading) {
+  const spread = SPREADS[state.selectedSpread];
+  const now = new Date().toISOString();
+
+  const cardFAQs = cards.map(card => ({
+    "@type": "Question",
+    "name": `¿Qué significa la carta ${card.name} en el Tarot?`,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": `${card.upright} Palabras clave: ${card.keywords.join(', ')}.`
+    }
+  }));
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "headline": `Lectura de Tarot: ${spread.name}`,
+        "description": reading.substring(0, 160) + "...",
+        "author": { "@type": "Organization", "name": "Oráculo del Tarot Online" },
+        "datePublished": now,
+        "articleBody": reading
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": cardFAQs
+      }
+    ]
+  };
+
+  els.dynamicSchema.textContent = JSON.stringify(schema);
+}
+
 // ─── SHOW LOADING ─────────────────────────────────────────────
 function showReadingLoading() {
   els.readingPanel.classList.add('visible');
@@ -362,6 +398,9 @@ async function onDraw() {
     // Await both completion
     const [reading] = await Promise.all([readingPromise, delayPromise]);
     await typewriterDisplay(reading);
+
+    // Update Structured Data for SEO Authority
+    updateStructuredData(cards, reading);
 
     // Reveal monetization/offering panel after reading
     setTimeout(() => {
