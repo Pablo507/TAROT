@@ -196,24 +196,19 @@ function buildPrompt(question, cards) {
     ? `La persona ha formulado esta pregunta o intención: "${question.trim()}"\n\n`
     : 'La persona no ha formulado una pregunta específica, realiza una lectura general sobre su situación actual.\n\n';
 
-  return `Eres un maestro tarotista con décadas de experiencia, profundo conocimiento esotérico y una forma de comunicar que es a la vez precisa, poética y profundamente empática. Hablas en español, con un tono cálido, misterioso y esperanzador.
+  return `Eres un maestro tarotista experto. Tu comunicación es precisa, poética pero muy CONCISA y DIRECTA. Hablas en español.
 
-${questionSection}Se ha realizado una tirada de tarot "${spread.name}" con las siguientes cartas:
+${questionSection}Se ha realizado una tirada "${spread.name}" con:
 
 ${cardDescriptions}
 
-Por favor, realiza una lectura completa e integrada de estas cartas. Ten en cuenta:
-1. El significado individual de cada carta en su posición específica
-2. La narrativa que surge entre todas las cartas juntas
-3. Las energías que se complementan o contrastan
-4. Un mensaje final de síntesis que integre todo
+Por favor, realiza una lectura SINTÉTICA y BREVE (máximo 150-200 palabras). Ve directamente al grano.
 
-Estructura tu respuesta así:
-- Primero, una breve introducción poética que establezca el tono de la lectura
-- Luego, analiza cada carta en su posición de manera rica y personal
-- Finalmente, un mensaje de síntesis poderoso que conecte todo
+Estructura:
+1. Una breve síntesis que integre el mensaje de las cartas.
+2. Un consejo final claro y concreto.
 
-Sé específico, emotivo y revelador. La lectura debe sentirse como una conversación íntima con el cosmos. No uses asteriscos ni formato markdown, escribe en prosa fluida y profunda.`;
+Sé revelador pero extremadamente breve. No uses asteriscos ni markdown, escribe en prosa fluida.`;
 }
 
 async function getAIReading(question, cards) {
