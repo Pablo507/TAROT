@@ -63,13 +63,7 @@ export default async function handler(req, res) {
 
     const suscripcion = await preapproval.create({
       body: {
-        reason: 'Tarot Diario por WhatsApp — Oráculo del Tarot IA',
-        auto_recurring: {
-          frequency: 1,
-          frequency_type: 'months',
-          transaction_amount: 15,        // $15 USD (minimo para evitar error 400 en MP de este usuario)
-          currency_id: 'USD',           // Mercado Pago USD
-        },
+        preapproval_plan_id: 'f510d6ed3e3041908f2223fe38d06985',
         back_url: `${process.env.APP_URL}/suscripcion-exitosa?sub=${subscriberId}`,
         payer_email: `${phone.replace('+', '')}@tarot.placeholder`, // MP requiere email
         external_reference: subscriberId,   // lo usamos en el webhook para identificar al usuario
