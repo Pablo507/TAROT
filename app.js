@@ -497,7 +497,7 @@ window.activarLeadCapture = function () {
       document.getElementById('lead-btn-text').textContent = 'Preparando pago…';
 
       try {
-        // Llama a MercadoPago para crear la suscripción de $1/mes
+        // Llama a MercadoPago para crear la suscripción de $15/mes
         const resp = await fetch('/api/create-subscription', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -511,12 +511,12 @@ window.activarLeadCapture = function () {
         } else {
           showFeedback(feedback, data.error || 'Error al crear la suscripción', 'error');
           btn.disabled = false;
-          document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $1/mes';
+          document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $15/mes';
         }
       } catch (e) {
         showFeedback(feedback, 'Error de conexión. Intentá de nuevo.', 'error');
         btn.disabled = false;
-        document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $1/mes';
+        document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $15/mes';
       }
     });
 

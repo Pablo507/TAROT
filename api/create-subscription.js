@@ -67,8 +67,8 @@ export default async function handler(req, res) {
         auto_recurring: {
           frequency: 1,
           frequency_type: 'months',
-          transaction_amount: 1,        // $1 USD (o ARS si configurás ARS)
-          currency_id: 'USD',           // cambiar a ARS/MXN/CLP según tu caso
+          transaction_amount: 15,        // $15 USD (minimo requerido por MP para USD)
+          currency_id: 'USD',           // Mercado Pago USD
         },
         back_url: `${process.env.APP_URL}/suscripcion-exitosa?sub=${subscriberId}`,
         payer_email: `${phone.replace('+', '')}@tarot.placeholder`, // MP requiere email
