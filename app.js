@@ -196,19 +196,24 @@ function buildPrompt(question, cards) {
     ? `La persona ha formulado esta pregunta o intención: "${question.trim()}"\n\n`
     : 'La persona no ha formulado una pregunta específica, realiza una lectura general sobre su situación actual.\n\n';
 
-  return `Eres un maestro tarotista experto. Tu comunicación es precisa, poética pero muy CONCISA y DIRECTA. Hablas en español.
+  return `Eres un maestro tarotista con décadas de experiencia, profundo conocimiento esotérico y una forma de comunicar que es a la vez precisa, poética y profundamente empática. Hablas en español, con un tono cálido, misterioso y esperanzador.
 
-${questionSection}Se ha realizado una tirada "${spread.name}" con:
+${questionSection}Se ha realizado una tirada de tarot "${spread.name}" con las siguientes cartas:
 
 ${cardDescriptions}
 
-Por favor, realiza una lectura SINTÉTICA y BREVE (máximo 150-200 palabras). Ve directamente al grano.
+Por favor, realiza una lectura completa e integrada de estas cartas. Ten en cuenta:
+1. El significado individual de cada carta en su posición específica
+2. La narrativa que surge entre todas las cartas juntas
+3. Las energías que se complementan o contrastan
+4. Un mensaje final de síntesis que integre todo
 
-Estructura:
-1. Una breve síntesis que integre el mensaje de las cartas.
-2. Un consejo final claro y concreto.
+Estructura tu respuesta así:
+- Primero, una breve introducción poética que establezca el tono de la lectura
+- Luego, analiza cada carta en su posición de manera rica y personal
+- Finalmente, un mensaje de síntesis poderoso que conecte todo
 
-Sé revelador pero extremadamente breve. No uses asteriscos ni markdown, escribe en prosa fluida.`;
+Sé específico, emotivo y revelador. La lectura debe sentirse como una conversación íntima con el cosmos. No uses asteriscos ni formato markdown, escribe en prosa fluida y profunda.`;
 }
 
 async function getAIReading(question, cards) {
@@ -402,6 +407,10 @@ async function onDraw() {
       updateDynamicRecommendation(cards);
       els.offeringPanel.style.display = 'block';
       els.offeringPanel.scrollIntoView({ behavior: 'smooth' });
+      // ── Lead capture WhatsApp ──
+      if (typeof window.activarLeadCapture === 'function') {
+        window.activarLeadCapture();
+      }
     }, 500);
 
   } catch (err) {
@@ -454,3 +463,67 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// ─── WHATSAPP LEAD CAPTURE ────────────────────────────────────
+window.activarLeadCapture = function () {
+  const panel = document.getElementById('lead-panel');
+  if (!panel || panel.dataset.shown) return;
+  panel.style.display = 'block';
+  panel.dataset.shown = '1';
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
+};
+
+(function initLeadForm() {
+  document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.getElementById('lead-submit-btn');
+    if (!btn) return;
+
+    btn.addEventListener('click', async function () {
+      const name     = document.getElementById('lead-name').value.trim();
+      const country  = document.getElementById('lead-country').value;
+      const rawPhone = document.getElementById('lead-phone').value.replace(/\D/g, '');
+      const consent  = document.getElementById('lead-consent').checked;
+      const feedback = document.getElementById('lead-feedback');
+
+      if (!rawPhone) {
+        showFeedback(feedback, 'Ingresá tu número de WhatsApp', 'error'); return;
+      }
+      if (!consent) {
+        showFeedback(feedback, 'Necesitamos tu aceptación para enviarte mensajes', 'error'); return;
+      }
+
+      const phone = country + rawPhone;
+      btn.disabled = true;
+      document.getElementById('lead-btn-text').textContent = 'Preparando pago…';
+
+      try {
+        // Llama a MercadoPago para crear la suscripción de $1/mes
+        const resp = await fetch('/api/create-subscription', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: rawPhone, name: name || null, country })
+        });
+        const data = await resp.json();
+        if (resp.ok && data.init_point) {
+          // Redirigir a la página de pago de MercadoPago
+          showFeedback(feedback, '✦ Redirigiendo a MercadoPago…', 'success');
+          setTimeout(() => { window.location.href = data.init_point; }, 800);
+        } else {
+          showFeedback(feedback, data.error || 'Error al crear la suscripción', 'error');
+          btn.disabled = false;
+          document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $1/mes';
+        }
+      } catch (e) {
+        showFeedback(feedback, 'Error de conexión. Intentá de nuevo.', 'error');
+        btn.disabled = false;
+        document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $1/mes';
+      }
+    });
+
+    function showFeedback(el, msg, tipo) {
+      el.textContent = msg;
+      el.className = tipo;
+      el.style.display = 'block';
+    }
+  });
+})();
