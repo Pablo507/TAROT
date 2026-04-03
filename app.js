@@ -498,7 +498,7 @@ window.activarLeadCapture = function () {
 
       try {
         // Llama a la API para crear el checkout de Lemon Squeezy
-        const resp = await fetch('/api/create-ls-checkout', {
+        const resp = await fetch('/api/create-subscription', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phone: rawPhone, name: name || null, country })
