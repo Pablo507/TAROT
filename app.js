@@ -497,26 +497,34 @@ window.activarLeadCapture = function () {
       document.getElementById('lead-btn-text').textContent = 'Preparando pago…';
 
       try {
-        // Llama a MercadoPago para crear la suscripción de $1/mes
-        const resp = await fetch('/api/create-subscription', {
+        // Llama a la API para crear el checkout de Lemon Squeezy
+        const resp = await fetch('/api/create-ls-checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phone: rawPhone, name: name || null, country })
         });
         const data = await resp.json();
-        if (resp.ok && data.init_point) {
-          // Redirigir a la página de pago de MercadoPago
-          showFeedback(feedback, '✦ Redirigiendo a MercadoPago…', 'success');
-          setTimeout(() => { window.location.href = data.init_point; }, 800);
+        if (resp.ok && data.checkout_url) {
+          // Abrir el checkout de Lemon Squeezy en modo overlay (o redirect si no carga JS)
+          showFeedback(feedback, '✦ Preparando pago seguro…', 'success');
+          
+          if (window.LemonSqueezy) {
+            window.LemonSqueezy.Url.Open(data.checkout_url);
+            btn.disabled = false;
+            document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $15/año';
+          } else {
+            // Fallback a redirección si el script no cargó
+            setTimeout(() => { window.location.href = data.checkout_url; }, 800);
+          }
         } else {
-          showFeedback(feedback, data.error || 'Error al crear la suscripción', 'error');
+          showFeedback(feedback, data.error || 'Error al crear el checkout', 'error');
           btn.disabled = false;
-          document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $1/mes';
+          document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $15/año';
         }
       } catch (e) {
         showFeedback(feedback, 'Error de conexión. Intentá de nuevo.', 'error');
         btn.disabled = false;
-        document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $1/mes';
+        document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $15/año';
       }
     });
 

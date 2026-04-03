@@ -1,18 +1,13 @@
-// api/create-subscription.js
-// Crea una suscripción recurrente en MercadoPago y redirige al usuario mediante Plan ID
-// POST /api/create-subscription  { phone, name, country }
+// api/create-ls-checkout.js
+// Registra al suscriptor en Supabase y devuelve la URL de checkout de Lemon Squeezy
+// POST /api/create-ls-checkout  { phone, name, country }
 
 import { createClient } from '@supabase/supabase-js'
-import { MercadoPagoConfig } from 'mercadopago'
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 )
-
-const mp = new MercadoPagoConfig({
-  accessToken: process.env.MP_ACCESS_TOKEN
-})
 
 function validarTelefono(phone) {
   return /^\+[1-9]\d{7,14}$/.test(phone.trim())
@@ -38,16 +33,16 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Número inválido. Incluí el código de país.' })
     }
 
-    // Guardar como PENDIENTE en Supabase (se activa cuando MP confirme el pago)
+    // Guardar como PENDIENTE en Supabase
     const { data: subscriber, error: dbError } = await supabase
       .from('subscribers')
       .upsert(
         {
           phone,
           name: name?.trim() || null,
-          active: false,           // inactivo hasta que pague
+          active: false,
           status: 'pending',
-          source: 'web_paid',
+          source: 'web_paid_ls',
         },
         { onConflict: 'phone', ignoreDuplicates: false }
       )
@@ -58,20 +53,25 @@ export default async function handler(req, res) {
 
     const subscriberId = subscriber.id
 
-    // En lugar de llamar a la API (que requiere card_token_id para Planes), 
-    // construimos el enlace de redirección directamente usando el Plan ID proporcionado.
-    const planId = 'f510d6ed3e3041908f2223fe38d06985';
-    // Se añade external_reference para el seguimiento en el webhook
-    const init_point = `https://www.mercadopago.com.uy/subscriptions/checkout?preapproval_plan_id=${planId}&external_reference=${subscriberId}`;
+    // Configuración de Lemon Squeezy
+    const storeId = process.env.LEMON_SQUEEZY_STORE_ID || '943511';
+    const variantId = process.env.LEMON_SQUEEZY_VARIANT_ID || '1482916';
+    
+    if (!variantId) {
+      return res.status(500).json({ error: 'Configuración incompleta (Variant ID)' });
+    }
+
+    // Construir la URL de checkout
+    // Pasamos el subscriberId en custom_data para poder identificarlo en el webhook
+    const checkoutUrl = `https://checkout.lemonsqueezy.com/checkout/buy/${variantId}?checkout[custom][subscriber_id]=${subscriberId}&checkout[full_name]=${encodeURIComponent(name || '')}&embed=1`;
 
     return res.status(200).json({ 
       ok: true,
-      init_point: init_point,
-      subscription_id: 'plan_based_' + subscriberId // ID temporal hasta que el webhook confirme
+      checkout_url: checkoutUrl
     })
 
   } catch (error) {
-    console.error('Error en create-subscription:', error);
-    return res.status(500).json({ error: 'Error al procesar la suscripción. Intentá de nuevo.' });
+    console.error('Error en create-ls-checkout:', error);
+    return res.status(500).json({ error: 'Error al procesar el checkout. Intentá de nuevo.' });
   }
 }
