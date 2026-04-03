@@ -54,17 +54,19 @@ from subscribers;
 -- Correr esto si ya ejecutaste el schema anterior
 
 alter table subscribers
-  add column if not exists status         text default 'pending',
+  add column if not exists status          text default 'pending',
   add column if not exists mp_preapproval_id text,
-  add column if not exists mp_status      text;
+  add column if not exists mp_status       text,
+  add column if not exists ls_order_id     text,
+  add column if not exists ls_event        text,
+  add column if not exists updated_at      timestamptz default now();
 
 -- Índice para buscar por preapproval_id desde el webhook
-create index if not exists idx_subscribers_mp
-  on subscribers(mp_preapproval_id)
-  where mp_preapproval_id is not null;
+create index if not exists idx_subscribers_mp on subscribers(mp_preapproval_id);
+
+-- Índice para buscar por ls_order_id desde el webhook
+create index if not exists idx_subscribers_ls on subscribers(ls_order_id);
 
 -- Comentarios para documentar los estados posibles
-comment on column subscribers.status is
-  'pending | active | paused | cancelled';
-comment on column subscribers.active is
-  'true solo cuando status=active (pago vigente)';
+comment on column subscribers.status is 'pending | active | paused | cancelled';
+comment on column subscribers.active is 'true solo cuando status=active (pago vigente)';
