@@ -1,6 +1,6 @@
-// api/create-ls-checkout.js
+// api/create-subscription.js
 // Registra al suscriptor en Supabase y devuelve la URL de checkout de Lemon Squeezy
-// POST /api/create-ls-checkout  { phone, name, country }
+// POST /api/create-subscription  { phone, name, country }
 
 import { createClient } from '@supabase/supabase-js'
 
@@ -62,7 +62,6 @@ export default async function handler(req, res) {
     }
 
     // Construir la URL de checkout
-    // Pasamos el subscriberId en custom_data para poder identificarlo en el webhook
     const checkoutUrl = `https://checkout.lemonsqueezy.com/checkout/buy/${variantId}?checkout[custom][subscriber_id]=${subscriberId}&checkout[full_name]=${encodeURIComponent(name || '')}&embed=1`;
 
     return res.status(200).json({ 
@@ -71,7 +70,7 @@ export default async function handler(req, res) {
     })
 
   } catch (error) {
-    console.error('Error en create-ls-checkout:', error);
+    console.error('Error en create-subscription:', error);
     return res.status(500).json({ error: 'Error al procesar el checkout. Intentá de nuevo.' });
   }
 }
