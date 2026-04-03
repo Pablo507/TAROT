@@ -1091,6 +1091,11 @@ footer {
   flex-shrink: 0;
 }
 
+.lead-phone-wrap select option {
+  background-color: #1a0040; /* Fondo oscuro para que se vea en desktop */
+  color: #fff;
+}
+
 .lead-phone-wrap input { flex: 1; }
 
 .lead-hint { font-size: 0.75rem; color: rgba(255,255,255,0.35); }
