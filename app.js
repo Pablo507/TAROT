@@ -202,18 +202,12 @@ ${questionSection}Se ha realizado una tirada de tarot "${spread.name}" con las s
 
 ${cardDescriptions}
 
-Por favor, realiza una lectura completa e integrada de estas cartas. Ten en cuenta:
-1. El significado individual de cada carta en su posición específica
-2. La narrativa que surge entre todas las cartas juntas
-3. Las energías que se complementan o contrastan
-4. Un mensaje final de síntesis que integre todo
+Por favor, realiza una lectura integradora de estas cartas. Sé conciso y directo, de unos 3 párrafos como máximo. Ten en cuenta:
+1. El significado clave de cada carta
+2. La narrativa que surge entre ellas
+3. Un mensaje final de síntesis
 
-Estructura tu respuesta así:
-- Primero, una breve introducción poética que establezca el tono de la lectura
-- Luego, analiza cada carta en su posición de manera rica y personal
-- Finalmente, un mensaje de síntesis poderoso que conecte todo
-
-Sé específico, emotivo y revelador. La lectura debe sentirse como una conversación íntima con el cosmos. No uses asteriscos ni formato markdown, escribe en prosa fluida y profunda.`;
+Estructura tu respuesta en texto fluido, poético pero breve. No uses asteriscos ni formato markdown. La lectura total no debe superar las 250 palabras.`;
 }
 
 async function getAIReading(question, cards) {
