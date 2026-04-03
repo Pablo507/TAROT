@@ -4,8 +4,7 @@
   "private": true,
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
-    "groq-sdk": "^0.7.0",
-    "mercadopago": "^2.0.15"
+    "groq-sdk": "^0.7.0"
   },
   "engines": {
     "node": "20.x"
