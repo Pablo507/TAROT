@@ -2,8 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.tarotgratis.online/</loc>
-    <lastmod>2026-03-28</lastmod>
-    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>https://www.tarotgratis.online/articulos/tarot-del-amor-gratis/</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.tarotgratis.online/articulos/tirada-de-tarot-gratis-online/</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.tarotgratis.online/articulos/lectura-de-tarot-para-hoy/</loc>
+    <priority>0.9</priority>
+  </url>
+  <url><loc>https://www.tarotgratis.online/significado/el-loco/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/el-mago/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/la-suma-sacerdotisa/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/la-emperatriz/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/el-emperador/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/el-sumo-sacerdote/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/los-amantes/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/el-carro/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/la-fuerza/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/el-ermitano/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/la-rueda-de-la-fortuna/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/la-justicia/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/el-colgado/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/la-muerte/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/la-templanza/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/el-diablo/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/la-torre/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/la-estrella/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/la-luna/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/el-sol/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/el-juicio/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.tarotgratis.online/significado/el-mundo/</loc><priority>0.8</priority></url>
 </urlset>

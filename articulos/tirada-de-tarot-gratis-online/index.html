@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tirada de Tarot Gratis Online - El Oráculo Interactivo</title>
+    <meta name="description" content="Realiza tu tirada de tarot gratis online ahora. Elige tus cartas y recibe una interpretación instantánea con nuestro oráculo virtual.">
+    <link rel="stylesheet" href="../../index.css">
+    <link rel="stylesheet" href="../article-style.css">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Tirada de Tarot Gratis Online - El Oráculo Interactivo",
+  "description": "Realiza tu tirada de tarot gratis online ahora. Elige tus cartas y recibe una interpretación instantánea con nuestro oráculo virtual."
+}
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="starfield"></div>
+    <div id="app" class="article-page">
+        <header>
+            <a href="/" class="back-link">🔮 Volver al Oráculo</a>
+            <h1>Tirada de Tarot Interactiva</h1>
+            <div class="mystical-divider">✦ ✦ ✦</div>
+        </header>
+
+        <article class="panel">
+            
+      <h2>El Oráculo Virtual a tu disposición</h2>
+      <p>Una tirada de tarot online es una herramienta poderosa de introspección. No se trata solo de adivinar el futuro, sino de entender el presente para construir el destino que deseas.</p>
+      <h3>Los beneficios del Tarot Online</h3>
+      <p>Al contrario que una consulta presencial, la tirada online te permite repetir el proceso en momentos de duda, manteniendo un registro espiritual de tu evolución.</p>
+    
+        </article>
+
+        <section class="cta-section">
+            <div class="panel">
+                <h2>¿Quieres una respuesta personalizada?</h2>
+                <p>Deja que los arcanos guíen tu camino con una lectura gratuita ahora mismo.</p>
+                <a href="/" class="draw-btn-link">Hacer mi Tirada de Tarot Gratis</a>
+            </div>
+        </section>
+
+        <footer>
+            ✦ Oráculo del Tarot — Guía de los Arcanos ✦
+        </footer>
+    </div>
+
+    <!-- Scripts for background only -->
+    <script>
+      // Simple Starfield Background
+      const field = document.getElementById('starfield');
+      for(let i=0; i<100; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        s.style.left = Math.random()*100 + '%';
+        s.style.top = Math.random()*100 + '%';
+        s.style.setProperty('--dur', (Math.random()*3 + 3) + 's');
+        s.style.setProperty('--delay', Math.random()*5 + 's');
+        field.appendChild(s);
+      }
+    </script>
+</body>
+</html>

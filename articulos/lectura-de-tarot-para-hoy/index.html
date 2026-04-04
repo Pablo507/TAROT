@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lectura de Tarot para Hoy: Guía y Consejo del Día</title>
+    <meta name="description" content="Obtén tu lectura de tarot para hoy gratis. Descubre el consejo arcano para tu jornada en amor, trabajo y bienestar.">
+    <link rel="stylesheet" href="../../index.css">
+    <link rel="stylesheet" href="../article-style.css">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Lectura de Tarot para Hoy: Guía y Consejo del Día",
+  "description": "Obtén tu lectura de tarot para hoy gratis. Descubre el consejo arcano para tu jornada en amor, trabajo y bienestar."
+}
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="starfield"></div>
+    <div id="app" class="article-page">
+        <header>
+            <a href="/" class="back-link">🔮 Volver al Oráculo</a>
+            <h1>Tu Lectura de Tarot para Hoy</h1>
+            <div class="mystical-divider">✦ ✦ ✦</div>
+        </header>
+
+        <article class="panel">
+            
+      <h2>Consejo Arcano para tu Jornada</h2>
+      <p>Cada mañana, el universo nos ofrece una energía renovada. La lectura de tarot para hoy te ayuda a sintonizar con esa vibración y anticipar los desafíos y oportunidades del día.</p>
+      <h3>La importancia de la Carta del Día</h3>
+      <p>Nuestra recomendación es que consultes una sola carta al despertar. Este arquetipo actuará como tu faro guía durante las próximas 24 horas.</p>
+    
+        </article>
+
+        <section class="cta-section">
+            <div class="panel">
+                <h2>¿Quieres una respuesta personalizada?</h2>
+                <p>Deja que los arcanos guíen tu camino con una lectura gratuita ahora mismo.</p>
+                <a href="/" class="draw-btn-link">Hacer mi Tirada de Tarot Gratis</a>
+            </div>
+        </section>
+
+        <footer>
+            ✦ Oráculo del Tarot — Guía de los Arcanos ✦
+        </footer>
+    </div>
+
+    <!-- Scripts for background only -->
+    <script>
+      // Simple Starfield Background
+      const field = document.getElementById('starfield');
+      for(let i=0; i<100; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        s.style.left = Math.random()*100 + '%';
+        s.style.top = Math.random()*100 + '%';
+        s.style.setProperty('--dur', (Math.random()*3 + 3) + 's');
+        s.style.setProperty('--delay', Math.random()*5 + 's');
+        field.appendChild(s);
+      }
+    </script>
+</body>
+</html>
