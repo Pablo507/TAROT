@@ -797,6 +797,49 @@ h1 {
   animation: fade-in 0.5s ease;
 }
 
+/* ─── SEO LINKS SECTION ─────────────────────────────────── */
+.seo-links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2.5rem;
+}
+
+.seo-col h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  color: var(--gold);
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.seo-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.seo-col li {
+  margin-bottom: 0.8rem;
+}
+
+.seo-col a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all var(--transition);
+}
+
+.seo-col a:hover {
+  color: var(--gold-light);
+  padding-left: 5px;
+}
+
+.seo-col small a {
+  font-style: italic;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
 /* ─── DIVIDER ────────────────────────────────────────────────── */
 .mystical-divider {
   text-align: center;
