@@ -95,27 +95,6 @@ header {
   position: relative;
 }
 
-.ai-badge {
-  display: inline-block;
-  padding: 0.35rem 1rem;
-  background: rgba(168, 85, 247, 0.1);
-  border: 1px solid var(--purple-light);
-  border-radius: 50px;
-  font-family: 'Cinzel', serif;
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--purple-light);
-  margin-bottom: 1.5rem;
-  box-shadow: 0 0 15px var(--purple-glow);
-  animation: pulse-glow 3s infinite;
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 15px var(--purple-glow); }
-  50% { box-shadow: 0 0 25px var(--purple-light); }
-}
-
 .header-glyph {
   font-size: 3rem;
   display: block;
