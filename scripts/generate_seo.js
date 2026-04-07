@@ -50,7 +50,7 @@ function getTemplate(title, metaDesc, h1, bodyContent, slug, schema) {
     <title>${title}</title>
     <meta name="description" content="${metaDesc}">
     <link rel="stylesheet" href="../../index.css">
-    <link rel="stylesheet" href="../article-style.css">
+    <link rel="stylesheet" href="../../significado/article-style.css">
     
     <!-- Structured Data -->
     <script type="application/ld+json">
