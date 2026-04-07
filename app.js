@@ -401,10 +401,11 @@ async function onDraw() {
       updateDynamicRecommendation(cards);
       els.offeringPanel.style.display = 'block';
       els.offeringPanel.scrollIntoView({ behavior: 'smooth' });
-      // ── Lead capture WhatsApp ──
+      /* ── Lead capture WhatsApp - OCULTO ──
       if (typeof window.activarLeadCapture === 'function') {
         window.activarLeadCapture();
       }
+      */
     }, 500);
 
   } catch (err) {
@@ -460,11 +461,14 @@ document.addEventListener('DOMContentLoaded', init);
 
 // ─── WHATSAPP LEAD CAPTURE ────────────────────────────────────
 window.activarLeadCapture = function () {
+  // OCULTO POR RECHAZO DE CUENTA LS
+  /*
   const panel = document.getElementById('lead-panel');
   if (!panel || panel.dataset.shown) return;
   panel.style.display = 'block';
   panel.dataset.shown = '1';
   setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
+  */
 };
 
 (function initLeadForm() {
