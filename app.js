@@ -31,6 +31,7 @@ const els = {
   dynToolCardName:$('dyn-tool-card-name'),
   dynToolTag:     $('dyn-tool-tag'),
   dynamicSchema:  $('dynamic-schema'),
+  ttsBtn:         $('tts-btn'),
 };
 
 // ─── STARFIELD ────────────────────────────────────────────────
@@ -420,12 +421,58 @@ async function onDraw() {
     els.drawBtn.disabled = false;
     els.drawBtn.classList.remove('processing');
     els.drawBtn.innerHTML = `<span class="btn-icon">🔮</span> Nueva Tirada`;
+    
+    // Show TTS button when reading is done
+    if ('speechSynthesis' in window && els.readingText.innerText.length > 0) {
+      els.ttsBtn.style.display = 'flex';
+      els.ttsBtn.innerHTML = '🎙️ Escuchar';
+      els.ttsBtn.classList.remove('playing');
+    }
   }
 }
 
 // ─── EVENT LISTENERS ──────────────────────────────────────────
 function setupEvents() {
   els.drawBtn.addEventListener('click', onDraw);
+  els.ttsBtn.addEventListener('click', toggleTTS);
+}
+
+// ─── TTS (TEXT-TO-SPEECH) ─────────────────────────────────────
+let currentUtterance = null;
+function toggleTTS() {
+  if (state.isReading) return;
+  if (window.speechSynthesis.speaking) {
+    window.speechSynthesis.cancel();
+    els.ttsBtn.classList.remove('playing');
+    els.ttsBtn.innerHTML = '🎙️ Escuchar';
+    return;
+  }
+  
+  // Clean up HTML tags and asterisks for smooth reading
+  const cleanText = els.readingText.innerText.replace(/[*_~`]/g, '');
+  if (!cleanText) return;
+
+  currentUtterance = new SpeechSynthesisUtterance(cleanText);
+  currentUtterance.lang = 'es-ES'; // Default to Spanish
+  currentUtterance.rate = 0.95; // Slightly slower for mystical tone
+  currentUtterance.pitch = 0.9;
+  
+  currentUtterance.onstart = () => {
+    els.ttsBtn.classList.add('playing');
+    els.ttsBtn.innerHTML = '⏸️ Detener';
+  };
+  
+  currentUtterance.onend = () => {
+    els.ttsBtn.classList.remove('playing');
+    els.ttsBtn.innerHTML = '🎙️ Escuchar';
+  };
+  
+  currentUtterance.onerror = () => {
+    els.ttsBtn.classList.remove('playing');
+    els.ttsBtn.innerHTML = '🎙️ Escuchar';
+  };
+
+  window.speechSynthesis.speak(currentUtterance);
 }
 
 // ─── ORACLE INTRO ─────────────────────────────────────────────
