@@ -89,8 +89,9 @@ function drawCards() {
 
 // ─── BUILD CARD HTML ──────────────────────────────────────────
 function getCardGradient(card) {
-  if (!card.colors) return 'linear-gradient(160deg,#2a1060,#0a0020)';
-  return `linear-gradient(160deg, ${card.colors[0]}22, #0a0020, ${card.colors[1]}11)`;
+  if (!card.colors) return 'linear-gradient(160deg, #1a0040, #0a0020)';
+  // Modern, deep nebula gradient using the card's accent colors
+  return `linear-gradient(165deg, ${card.colors[0]}44, #0d0020 40%, ${card.colors[1]}22 90%)`;
 }
 
 function getAccentColor(card) {
