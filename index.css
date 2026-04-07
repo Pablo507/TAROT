@@ -6,22 +6,22 @@
 
 /* ─── CSS VARIABLES ─────────────────────────────────────────── */
 :root {
-  --bg-deep:       #150b2b;
-  --bg-mid:        #1f143d;
-  --bg-card:       #291c4f;
+  --bg-deep:       #1e143b;
+  --bg-mid:        #2d1e57;
+  --bg-card:       #3c2872;
   --gold:          #c9a84c;
   --gold-light:    #f0d080;
   --gold-glow:     #ffd70066;
-  --purple:        #6b21a8;
-  --purple-light:  #a855f7;
-  --purple-glow:   #a855f733;
-  --teal:          #0d9488;
-  --teal-light:    #2dd4bf;
-  --red-dark:      #7f1d1d;
-  --text-primary:  #f0e6d3;
-  --text-muted:    #8b7d9a;
-  --glass:         rgba(255,255,255,0.07);
-  --glass-border:  rgba(201,168,76,0.2);
+  --purple:        #822bbd;
+  --purple-light:  #b66df8;
+  --purple-glow:   #b66df833;
+  --teal:          #0faba2;
+  --teal-light:    #3de3cf;
+  --red-dark:      #991f1f;
+  --text-primary:  #fdf8f0;
+  --text-muted:    #a093b0;
+  --glass:         rgba(255,255,255,0.08);
+  --glass-border:  rgba(201,168,76,0.3);
   --card-w:        160px;
   --card-h:        280px;
   --radius:        12px;
