@@ -100,17 +100,6 @@ function getAccentColor(card) {
   return card.colors[0];
 }
 
-function getCardImageUri(card) {
-  let prefix = 'm';
-  let num = card.id;
-  if(card.suit === "Bastos") { prefix = 'w'; num = card.id - 21; }
-  else if(card.suit === "Copas") { prefix = 'c'; num = card.id - 35; }
-  else if(card.suit === "Espadas") { prefix = 's'; num = card.id - 49; }
-  else if(card.suit === "Pentáculos") { prefix = 'p'; num = card.id - 63; }
-  const numStr = num.toString().padStart(2, '0');
-  return `images/cards/${prefix}${numStr}.jpg`;
-}
-
 function buildCardElement(card, positionLabel, index) {
   const slot = document.createElement('div');
   slot.className = 'card-slot';
@@ -126,16 +115,19 @@ function buildCardElement(card, positionLabel, index) {
   if (card.reversed) card3d.classList.add('reversed');
 
   const accentColor = getAccentColor(card);
-  const imgUri = getCardImageUri(card);
 
   card3d.innerHTML = `
     <div class="card-inner">
       <div class="card-face card-back">
         <div class="card-back-pattern">✦</div>
       </div>
-      <div class="card-face card-front" style="background-image: url('${imgUri}'); background-size: cover; background-position: center;">
-        <div class="card-front-inner" style="${card.reversed ? 'transform:rotate(180deg);' : ''} width: 100%; height: 100%;">
-          ${card.reversed ? '<div class="card-reversed-tag" style="position: absolute; bottom: 10px; background: rgba(0,0,0,0.8); left: 50%; transform: translateX(-50%); white-space: nowrap;">Invertida</div>' : ''}
+      <div class="card-face card-front" style="background: ${getCardGradient(card)};">
+        <div class="card-front-inner" style="${card.reversed ? 'transform:rotate(180deg)' : ''}">
+          <div class="card-symbol">${card.symbol}</div>
+          <div class="card-numeral">${card.numeral}</div>
+          <div class="card-name">${card.name}</div>
+          <div class="card-arcana">${card.suit ? card.suit : card.arcana}</div>
+          ${card.reversed ? '<div class="card-reversed-tag">Invertida</div>' : ''}
         </div>
         <div class="card-accent" style="background: linear-gradient(90deg, ${accentColor}, transparent);"></div>
       </div>

@@ -1,0 +1,133 @@
+/* ============================================================
+   ARTICLE-STYLE.CSS — SEO Content Pages Styles
+   ============================================================ */
+
+.article-page {
+  padding-top: 2rem !important;
+  max-width: 800px !important; /* Narrower for better readability */
+}
+
+header h1 {
+  font-size: 2.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--gold);
+  text-decoration: none;
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
+
+.back-link:hover {
+  text-shadow: 0 0 10px var(--gold-glow);
+  transform: translateX(-5px);
+}
+
+/* ─── ARTICLE CONTENT ────────────────────────────────────────── */
+
+article.panel {
+  padding: 3rem 4rem; /* More padding for text */
+}
+
+@media (max-width: 600px) {
+  article.panel {
+    padding: 2rem 1.5rem;
+  }
+  header h1 {
+    font-size: 2rem;
+  }
+}
+
+article h2 {
+  font-family: 'Cinzel', serif;
+  color: var(--gold);
+  font-size: 1.8rem;
+  margin: 2.5rem 0 1.25rem;
+  line-height: 1.2;
+}
+
+article h3 {
+  font-family: 'Cinzel', serif;
+  color: var(--gold-light);
+  font-size: 1.3rem;
+  margin: 2rem 0 1rem;
+}
+
+article p {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+article strong {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* ─── CTA SECTION ──────────────────────────────────────────── */
+
+.cta-section {
+  margin-top: 4rem;
+  text-align: center;
+}
+
+.cta-section .panel {
+  background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(201,168,76,0.1));
+}
+
+.draw-btn-link {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 1.2rem 2.5rem;
+  background: var(--gold);
+  color: var(--bg-deep);
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.3s;
+  box-shadow: 0 10px 30px rgba(201,168,76,0.3);
+}
+
+.draw-btn-link:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 40px rgba(201,168,76,0.5);
+  background: var(--gold-light);
+}
+
+footer {
+  margin-top: 4rem;
+  opacity: 0.6;
+}
+
+/* Stars Background Helper */
+#starfield {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--bg-deep);
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: twinkle var(--dur) infinite alternate;
+  animation-delay: var(--delay);
+}
+
+@keyframes twinkle {
+  from { opacity: 0.2; transform: scale(1); }
+  to { opacity: 1; transform: scale(1.5); }
+}

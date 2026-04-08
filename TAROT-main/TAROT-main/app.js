@@ -31,7 +31,6 @@ const els = {
   dynToolCardName:$('dyn-tool-card-name'),
   dynToolTag:     $('dyn-tool-tag'),
   dynamicSchema:  $('dynamic-schema'),
-  ttsBtn:         $('tts-btn'),
 };
 
 // ─── STARFIELD ────────────────────────────────────────────────
@@ -90,25 +89,13 @@ function drawCards() {
 
 // ─── BUILD CARD HTML ──────────────────────────────────────────
 function getCardGradient(card) {
-  if (!card.colors) return 'linear-gradient(160deg, #1a0040, #0a0020)';
-  // Modern, deep nebula gradient using the card's accent colors
-  return `linear-gradient(165deg, ${card.colors[0]}44, #0d0020 40%, ${card.colors[1]}22 90%)`;
+  if (!card.colors) return 'linear-gradient(160deg,#2a1060,#0a0020)';
+  return `linear-gradient(160deg, ${card.colors[0]}22, #0a0020, ${card.colors[1]}11)`;
 }
 
 function getAccentColor(card) {
   if (!card.colors) return '#c9a84c';
   return card.colors[0];
-}
-
-function getCardImageUri(card) {
-  let prefix = 'm';
-  let num = card.id;
-  if(card.suit === "Bastos") { prefix = 'w'; num = card.id - 21; }
-  else if(card.suit === "Copas") { prefix = 'c'; num = card.id - 35; }
-  else if(card.suit === "Espadas") { prefix = 's'; num = card.id - 49; }
-  else if(card.suit === "Pentáculos") { prefix = 'p'; num = card.id - 63; }
-  const numStr = num.toString().padStart(2, '0');
-  return `images/cards/${prefix}${numStr}.jpg`;
 }
 
 function buildCardElement(card, positionLabel, index) {
@@ -126,16 +113,19 @@ function buildCardElement(card, positionLabel, index) {
   if (card.reversed) card3d.classList.add('reversed');
 
   const accentColor = getAccentColor(card);
-  const imgUri = getCardImageUri(card);
 
   card3d.innerHTML = `
     <div class="card-inner">
       <div class="card-face card-back">
         <div class="card-back-pattern">✦</div>
       </div>
-      <div class="card-face card-front" style="background-image: url('${imgUri}'); background-size: cover; background-position: center;">
-        <div class="card-front-inner" style="${card.reversed ? 'transform:rotate(180deg);' : ''} width: 100%; height: 100%;">
-          ${card.reversed ? '<div class="card-reversed-tag" style="position: absolute; bottom: 10px; background: rgba(0,0,0,0.8); left: 50%; transform: translateX(-50%); white-space: nowrap;">Invertida</div>' : ''}
+      <div class="card-face card-front" style="background: ${getCardGradient(card)};">
+        <div class="card-front-inner" style="${card.reversed ? 'transform:rotate(180deg)' : ''}">
+          <div class="card-symbol">${card.symbol}</div>
+          <div class="card-numeral">${card.numeral}</div>
+          <div class="card-name">${card.name}</div>
+          <div class="card-arcana">${card.suit ? card.suit : card.arcana}</div>
+          ${card.reversed ? '<div class="card-reversed-tag">Invertida</div>' : ''}
         </div>
         <div class="card-accent" style="background: linear-gradient(90deg, ${accentColor}, transparent);"></div>
       </div>
@@ -212,12 +202,18 @@ ${questionSection}Se ha realizado una tirada de tarot "${spread.name}" con las s
 
 ${cardDescriptions}
 
-Por favor, realiza una lectura integradora de estas cartas. Sé conciso y directo, de unos 3 párrafos como máximo. Ten en cuenta:
-1. El significado clave de cada carta
-2. La narrativa que surge entre ellas
-3. Un mensaje final de síntesis
+Por favor, realiza una lectura completa e integrada de estas cartas. Ten en cuenta:
+1. El significado individual de cada carta en su posición específica
+2. La narrativa que surge entre todas las cartas juntas
+3. Las energías que se complementan o contrastan
+4. Un mensaje final de síntesis que integre todo
 
-Estructura tu respuesta en texto fluido, poético pero breve. No uses asteriscos ni formato markdown. La lectura total no debe superar las 250 palabras.`;
+Estructura tu respuesta así:
+- Primero, una breve introducción poética que establezca el tono de la lectura
+- Luego, analiza cada carta en su posición de manera rica y personal
+- Finalmente, un mensaje de síntesis poderoso que conecte todo
+
+Sé específico, emotivo y revelador. La lectura debe sentirse como una conversación íntima con el cosmos. No uses asteriscos ni formato markdown, escribe en prosa fluida y profunda.`;
 }
 
 async function getAIReading(question, cards) {
@@ -411,11 +407,10 @@ async function onDraw() {
       updateDynamicRecommendation(cards);
       els.offeringPanel.style.display = 'block';
       els.offeringPanel.scrollIntoView({ behavior: 'smooth' });
-      /* ── Lead capture WhatsApp - OCULTO ──
+      // ── Lead capture WhatsApp ──
       if (typeof window.activarLeadCapture === 'function') {
         window.activarLeadCapture();
       }
-      */
     }, 500);
 
   } catch (err) {
@@ -429,58 +424,12 @@ async function onDraw() {
     els.drawBtn.disabled = false;
     els.drawBtn.classList.remove('processing');
     els.drawBtn.innerHTML = `<span class="btn-icon">🔮</span> Nueva Tirada`;
-    
-    // Show TTS button when reading is done
-    if ('speechSynthesis' in window && els.readingText.innerText.length > 0) {
-      els.ttsBtn.style.display = 'flex';
-      els.ttsBtn.innerHTML = '🎙️ Escuchar';
-      els.ttsBtn.classList.remove('playing');
-    }
   }
 }
 
 // ─── EVENT LISTENERS ──────────────────────────────────────────
 function setupEvents() {
   els.drawBtn.addEventListener('click', onDraw);
-  els.ttsBtn.addEventListener('click', toggleTTS);
-}
-
-// ─── TTS (TEXT-TO-SPEECH) ─────────────────────────────────────
-let currentUtterance = null;
-function toggleTTS() {
-  if (state.isReading) return;
-  if (window.speechSynthesis.speaking) {
-    window.speechSynthesis.cancel();
-    els.ttsBtn.classList.remove('playing');
-    els.ttsBtn.innerHTML = '🎙️ Escuchar';
-    return;
-  }
-  
-  // Clean up HTML tags and asterisks for smooth reading
-  const cleanText = els.readingText.innerText.replace(/[*_~`]/g, '');
-  if (!cleanText) return;
-
-  currentUtterance = new SpeechSynthesisUtterance(cleanText);
-  currentUtterance.lang = 'es-ES'; // Default to Spanish
-  currentUtterance.rate = 0.95; // Slightly slower for mystical tone
-  currentUtterance.pitch = 0.9;
-  
-  currentUtterance.onstart = () => {
-    els.ttsBtn.classList.add('playing');
-    els.ttsBtn.innerHTML = '⏸️ Detener';
-  };
-  
-  currentUtterance.onend = () => {
-    els.ttsBtn.classList.remove('playing');
-    els.ttsBtn.innerHTML = '🎙️ Escuchar';
-  };
-  
-  currentUtterance.onerror = () => {
-    els.ttsBtn.classList.remove('playing');
-    els.ttsBtn.innerHTML = '🎙️ Escuchar';
-  };
-
-  window.speechSynthesis.speak(currentUtterance);
 }
 
 // ─── ORACLE INTRO ─────────────────────────────────────────────
@@ -517,14 +466,11 @@ document.addEventListener('DOMContentLoaded', init);
 
 // ─── WHATSAPP LEAD CAPTURE ────────────────────────────────────
 window.activarLeadCapture = function () {
-  // OCULTO POR RECHAZO DE CUENTA LS
-  /*
   const panel = document.getElementById('lead-panel');
   if (!panel || panel.dataset.shown) return;
   panel.style.display = 'block';
   panel.dataset.shown = '1';
   setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
-  */
 };
 
 (function initLeadForm() {
@@ -551,34 +497,26 @@ window.activarLeadCapture = function () {
       document.getElementById('lead-btn-text').textContent = 'Preparando pago…';
 
       try {
-        // Llama a la API para crear el checkout de Lemon Squeezy
+        // Llama a MercadoPago para crear la suscripción de $1/mes
         const resp = await fetch('/api/create-subscription', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phone: rawPhone, name: name || null, country })
         });
         const data = await resp.json();
-        if (resp.ok && data.checkout_url) {
-          // Abrir el checkout de Lemon Squeezy en modo overlay (o redirect si no carga JS)
-          showFeedback(feedback, '✦ Preparando pago seguro…', 'success');
-          
-          if (window.LemonSqueezy) {
-            window.LemonSqueezy.Url.Open(data.checkout_url);
-            btn.disabled = false;
-            document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $15/año';
-          } else {
-            // Fallback a redirección si el script no cargó
-            setTimeout(() => { window.location.href = data.checkout_url; }, 800);
-          }
+        if (resp.ok && data.init_point) {
+          // Redirigir a la página de pago de MercadoPago
+          showFeedback(feedback, '✦ Redirigiendo a MercadoPago…', 'success');
+          setTimeout(() => { window.location.href = data.init_point; }, 800);
         } else {
-          showFeedback(feedback, data.error || 'Error al crear el checkout', 'error');
+          showFeedback(feedback, data.error || 'Error al crear la suscripción', 'error');
           btn.disabled = false;
-          document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $15/año';
+          document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $1/mes';
         }
       } catch (e) {
         showFeedback(feedback, 'Error de conexión. Intentá de nuevo.', 'error');
         btn.disabled = false;
-        document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $15/año';
+        document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $1/mes';
       }
     });
 
