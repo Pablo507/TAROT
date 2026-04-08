@@ -22,8 +22,8 @@
   --text-muted:    #a093b0;
   --glass:         rgba(255,255,255,0.08);
   --glass-border:  rgba(201,168,76,0.3);
-  --card-w:        200px;
-  --card-h:        340px;
+  --card-w:        160px;
+  --card-h:        280px;
   --radius:        12px;
   --transition:    0.4s cubic-bezier(0.4,0,0.2,1);
 }
@@ -371,8 +371,8 @@ h1 {
 
 @media (max-width: 600px) {
   :root {
-    --card-w: 160px;
-    --card-h: 275px;
+    --card-w: 130px;
+    --card-h: 230px;
   }
 }
 

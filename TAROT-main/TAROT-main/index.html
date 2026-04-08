@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lectura de Cartas Gratis - Tarot Online y Oráculo</title>
+  <meta name="description" content="Obtén tu lectura de cartas gratis al instante. Descubre qué dicen los arcanos sobre tu futuro, amor y trabajo con nuestro tarot gratis online interactivo.">
+  <meta name="keywords" content="lectura de cartas gratis, tarot gratis, oraculo online, tarot online uruguay, lectura de cartas">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.tarotgratis.online/">
+  <meta property="og:title" content="Lectura de Cartas Gratis - Tarot Online y Oráculo">
+  <meta property="og:description" content="Obtén tu lectura de cartas gratis al instante. Descubre qué dicen los arcanos sobre tu futuro, amor y trabajo con nuestro tarot gratis online interactivo.">
+  <meta property="og:image" content="https://www.tarotgratis.online/social-preview.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://www.tarotgratis.online/">
+  <meta property="twitter:title" content="Lectura de Cartas Gratis - Tarot Online y Oráculo">
+  <meta property="twitter:description" content="Obtén tu lectura de cartas gratis al instante. Descubre qué dicen los arcanos sobre tu futuro, amor y trabajo con nuestro tarot gratis online interactivo.">
+  <meta property="twitter:image" content="https://www.tarotgratis.online/social-preview.png">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>">
+  <link rel="stylesheet" href="index.css">
+
+  <!-- Static Structured Data (Schema.org) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Oráculo del Tarot Gratis Online",
+    "url": "https://www.tarotgratis.online/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://www.tarotgratis.online/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Oráculo del Tarot IA",
+    "operatingSystem": "All",
+    "applicationCategory": "EsotericApplication",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "1240"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "¿Cómo funciona la lectura de cartas gratis online?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nuestra lectura de cartas gratis utiliza un sistema de aleatoriedad mística junto con inteligencia artificial avanzada para interpretar los arcanos de manera personalizada según tu pregunta o intención."
+      }
+    }, {
+      "@type": "Question",
+      "name": "¿Qué es el Oráculo del Tarot?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "El Oráculo del Tarot es una herramienta de introspección y guía que utiliza las 78 cartas del tarot (Arcanos Mayores y Menores) para reflejar energías, situaciones y posibles caminos en el futuro, amor y trabajo."
+      }
+    }, {
+      "@type": "Question",
+      "name": "¿Es fiable el tarot online con inteligencia artificial?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "La IA actúa como un puente moderno hacia el conocimiento ancestral, analizando las combinaciones de cartas con una profundidad y empatía similar a la de un tarotista experimentado, ofreciendo perspectivas únicas."
+      }
+    }]
+  }
+  </script>
+
+  <!-- Container for Dynamic Structured Data -->
+  <script id="dynamic-schema" type="application/ld+json"></script>
+</head>
+<body>
+
+  <!-- Stars -->
+  <div id="starfield"></div>
+
+  <!-- Main App -->
+  <div id="app">
+
+    <!-- ─── HEADER ──────────────────────────────────────────── -->
+    <header>
+      <span class="header-glyph">🔮</span>
+      <h1>Oráculo del Tarot</h1>
+      <p class="subtitle">Abre tu corazón al conocimiento ancestral de los arcanos</p>
+    </header>
+
+    <!-- ─── QUESTION ────────────────────────────────────────── -->
+    <section class="panel" id="question-panel">
+      <div class="panel-title">✦ Tu Pregunta al Universo</div>
+      <div class="question-wrapper">
+        <textarea id="question-input" placeholder="Escribe tu pregunta, intención o simplemente deja que el cosmos te guíe…" rows="3"></textarea>
+      </div>
+    </section>
+
+    <!-- ─── SPREAD SELECTOR ─────────────────────────────────── -->
+    <section class="panel" id="spread-panel">
+      <div class="panel-title">✦ Elige tu Tirada</div>
+      <div class="spread-grid">
+
+        <button class="spread-btn" data-spread="daily">
+          <span class="spread-icon">⭐</span>
+          <span class="spread-name">Carta del Día</span>
+          <span class="spread-count">1 carta</span>
+        </button>
+
+        <button class="spread-btn active" data-spread="three">
+          <span class="spread-icon">🌀</span>
+          <span class="spread-name">Pasado · Presente · Futuro</span>
+          <span class="spread-count">3 cartas</span>
+        </button>
+
+        <button class="spread-btn" data-spread="five">
+          <span class="spread-icon">✦</span>
+          <span class="spread-name">Cruz Celta</span>
+          <span class="spread-count">5 cartas</span>
+        </button>
+
+        <button class="spread-btn" data-spread="celtic">
+          <span class="spread-icon">🌟</span>
+          <span class="spread-name">Cruz Celta Completa</span>
+          <span class="spread-count">10 cartas</span>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- ─── DRAW BUTTON ─────────────────────────────────────── -->
+    <div class="draw-section">
+      <button id="draw-btn">
+        <span class="btn-icon">🃏</span>
+        Tirar las Cartas
+      </button>
+
+    </div>
+
+    <!-- ─── CARD SPREAD AREA ────────────────────────────────── -->
+    <div id="spread-area"></div>
+
+    <!-- ─── CARDS SUMMARY PILLS ─────────────────────────────── -->
+    <div id="cards-summary"></div>
+
+    <div class="mystical-divider">✦ ✦ ✦</div>
+
+    <!-- ─── AI READING ──────────────────────────────────────── -->
+    <section class="panel" id="reading-panel">
+      <div class="reading-header">
+        <div class="reading-icon">🌌</div>
+        <div class="reading-meta">
+          <div class="reading-title">El Oráculo Habla</div>
+          <div id="reading-date" class="reading-date"></div>
+        </div>
+      </div>
+      <div id="reading-text"></div>
+    </section>
+
+    <!-- ─── OFFERINGS & TOOLS ────────────────────────────────── -->
+    <section class="panel" id="offering-panel" style="display: none;">
+      <div class="offering-content">
+        <div class="offering-gift">🎁</div>
+        <h2 class="offering-title">¿Han sido las estrellas generosas hoy?</h2>
+        <p class="offering-desc">
+          Si la guía del oráculo te ha servido de ayuda, considera realizar una pequeña <strong>ofrenda</strong> para que la llama de la sabiduría siga encendida.
+        </p>
+        
+        <div class="offering-actions">
+          <a href="https://ko-fi.com/tarotai" target="_blank" class="offering-btn" id="offering-btn">
+            <span class="btn-icon">☕</span>
+            Apoyar el Oráculo (Ko-fi)
+          </a>
+        </div>
+
+        <!-- ─── DYNAMIC RECOMMENDATION ──────────────────────────── -->
+        <div id="dynamic-recommendation" class="dynamic-tool-highlight" style="display: none;">
+          <div class="tools-divider">Sugerencia para esta lectura</div>
+          <div class="dynamic-wrapper">
+             <div class="dynamic-text">
+                <h3 id="dyn-tool-name"></h3>
+                <p id="dyn-tool-desc"></p>
+             </div>
+             <div id="dyn-tool-link" class="tool-card highlight">
+                <div class="tool-icon" id="dyn-tool-icon"></div>
+                <div class="tool-info">
+                   <span class="tool-name" id="dyn-tool-card-name"></span>
+                   <span class="tool-tag" id="dyn-tool-tag"></span>
+                </div>
+             </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─── WHATSAPP LEAD CAPTURE (PAGO) ──────────────────── -->
+    <section class="panel" id="lead-panel" style="display:none;">
+      <div class="panel-title">🌙 Tarot Diario en tu WhatsApp</div>
+      <div class="lead-content">
+
+        <!-- Precio destacado -->
+        <div class="lead-price-box">
+          <div class="lead-price-amount">$1 <span class="lead-price-period">USD / mes</span></div>
+          <div class="lead-price-desc">Cancelás cuando quieras respondiendo STOP</div>
+        </div>
+
+        <!-- Beneficios -->
+        <ul class="lead-benefits">
+          <li>✦ Una carta del tarot cada mañana</li>
+          <li>✦ Interpretación personalizada por IA</li>
+          <li>✦ Directo a tu WhatsApp, sin apps extra</li>
+          <li>✦ Cancela cuando quieras</li>
+        </ul>
+
+        <div class="lead-form">
+          <div class="lead-input-group">
+            <label for="lead-name">Tu nombre (opcional)</label>
+            <input type="text" id="lead-name" placeholder="María..." autocomplete="given-name" />
+          </div>
+          <div class="lead-input-group">
+            <label for="lead-phone">Tu WhatsApp <span style="color:#f87171">*</span></label>
+            <div class="lead-phone-wrap">
+              <select id="lead-country">
+                <option value="+54">+54 ARG</option>
+                <option value="+52">+52 MEX</option>
+                <option value="+34">+34 ESP</option>
+                <option value="+57">+57 COL</option>
+                <option value="+56">+56 CHI</option>
+                <option value="+51">+51 PER</option>
+                <option value="+598">+598 URU</option>
+                <option value="+58">+58 VEN</option>
+                <option value="+1">+1 USA</option>
+              </select>
+              <input type="tel" id="lead-phone" placeholder="9 1155 550000" inputmode="numeric" />
+            </div>
+            <small class="lead-hint">Solo números, sin el 0 ni el 15</small>
+          </div>
+          <div class="lead-consent-row">
+            <input type="checkbox" id="lead-consent" />
+            <label for="lead-consent">
+              Acepto suscribirme por $1 USD/mes y recibir mensajes de WhatsApp.
+              Puedo cancelar respondiendo STOP.
+            </label>
+          </div>
+          <button id="lead-submit-btn" class="lead-submit-btn">
+            <span id="lead-btn-text">🔮 Suscribirme por $1/mes</span>
+          </button>
+          <div id="lead-feedback" style="display:none;"></div>
+        </div>
+        <p class="lead-privacy">🔒 Pago seguro vía MercadoPago. Tu número es privado.</p>
+      </div>
+    </section>
+
+    <!-- ─── FOOTER ──────────────────────────────────────────── -->
+    <div class="seo-text" style="text-align: center; font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-top: 2rem; padding: 0 1rem;">
+      Descubre tu destino con nuestra <strong>lectura de cartas gratis</strong>. El oráculo te ofrece guía espiritual y claridad a través del tarot online.
+    </div>
+
+    <footer>
+      ✦ Oráculo del Tarot — Lectura de Cartas Gratis ✦
+    </footer>
+
+  </div>
+
+
+
+  <!-- Scripts -->
+  <script src="tarot-data.js"></script>
+  <script src="app.js"></script>
+
+  <!-- Ko-fi Widget -->
+  <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+  <script>
+    kofiWidgetOverlay.draw('tarotai', {
+      'type': 'floating-chat',
+      'floating-chat.donateButton.text': 'Apóyame',
+      'floating-chat.donateButton.background-color': '#fcbf47',
+      'floating-chat.donateButton.text-color': '#323842'
+    });
+  </script>
+
+</body>
+</html>

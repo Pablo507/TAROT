@@ -1,0 +1,14 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/daily-tarot",
+      "schedule": "0 12 * * *"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/suscripcion-exitosa",
+      "destination": "/suscripcion-exitosa.html"
+    }
+  ]
+}
