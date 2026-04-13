@@ -1313,3 +1313,55 @@ footer {
   100% { box-shadow: 0 0 0 0 transparent; }
 }
 
+
+/* ─── SEO DIRECTORY ────────────────────────────────────────── */
+.seo-directory {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.seo-section h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.seo-grid-arcanos, .seo-grid-articulos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.seo-grid-arcanos a, .seo-grid-articulos a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all var(--transition);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid transparent;
+  display: block;
+}
+
+.seo-grid-arcanos a:hover, .seo-grid-articulos a:hover {
+  color: var(--gold-light);
+  background: rgba(201,168,76,0.05);
+  border-color: rgba(201,168,76,0.3);
+  transform: translateX(5px);
+}
+
+@media (max-width: 600px) {
+  .seo-grid-arcanos, .seo-grid-articulos {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
