@@ -6,22 +6,22 @@
 
 /* ─── CSS VARIABLES ─────────────────────────────────────────── */
 :root {
-  --bg-deep:       #1e143b;
-  --bg-mid:        #2d1e57;
-  --bg-card:       #3c2872;
-  --gold:          #c9a84c;
-  --gold-light:    #f0d080;
-  --gold-glow:     #ffd70066;
-  --purple:        #822bbd;
-  --purple-light:  #b66df8;
-  --purple-glow:   #b66df833;
-  --teal:          #0faba2;
-  --teal-light:    #3de3cf;
+  --bg-deep:       #fcf9f2;
+  --bg-mid:        #f3ede0;
+  --bg-card:       #ffffff;
+  --gold:          #b28629;
+  --gold-light:    #c49a3f;
+  --gold-glow:     #d4af3733;
+  --purple:        #5a3a99;
+  --purple-light:  #7552bb;
+  --purple-glow:   #5a3a9922;
+  --teal:          #0b8079;
+  --teal-light:    #0faba2;
   --red-dark:      #991f1f;
-  --text-primary:  #fdf8f0;
-  --text-muted:    #a093b0;
-  --glass:         rgba(255,255,255,0.08);
-  --glass-border:  rgba(201,168,76,0.3);
+  --text-primary:  #2d1e57;
+  --text-muted:    #6b5a8e;
+  --glass:         rgba(255,255,255,0.7);
+  --glass-border:  rgba(178,134,41,0.25);
   --card-w:        200px;
   --card-h:        340px;
   --radius:        12px;
@@ -72,9 +72,9 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(107,33,168,0.2) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(13,148,136,0.15) 0%, transparent 70%),
-    radial-gradient(ellipse 100% 60% at 50% 50%, rgba(21,11,43,0.3) 0%, transparent 100%);
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(130,43,189,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(178,134,41,0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 100% 60% at 50% 50%, rgba(255,255,255,0.5) 0%, transparent 100%);
   pointer-events: none;
   z-index: 0;
 }
@@ -112,7 +112,7 @@ h1 {
   font-family: 'Cinzel Decorative', serif;
   font-size: clamp(2rem, 5vw, 3.8rem);
   font-weight: 700;
-  background: linear-gradient(135deg, var(--gold-light), var(--gold), #b8860b, var(--gold-light));
+  background: linear-gradient(135deg, var(--gold-light), var(--gold), #8a631c, var(--gold-light));
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -147,8 +147,8 @@ h1 {
   position: relative;
   overflow: hidden;
   box-shadow: 
-    0 10px 40px rgba(0,0,0,0.3),
-    0 0 0 1px rgba(255,255,255,0.05) inset;
+    0 10px 40px rgba(45,30,87,0.06),
+    0 0 0 1px rgba(255,255,255,0.5) inset;
 }
 
 .panel::before {
@@ -268,7 +268,7 @@ h1 {
   background: linear-gradient(135deg, #4c1d95, #6b21a8, #7c3aed);
   border: 1px solid var(--purple-light);
   border-radius: 50px;
-  color: var(--text-primary);
+  color: #ffffff;
   font-family: 'Cinzel', serif;
   font-size: 1rem;
   letter-spacing: 0.15em;
