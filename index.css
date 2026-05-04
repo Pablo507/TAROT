@@ -6,22 +6,22 @@
 
 /* ─── CSS VARIABLES ─────────────────────────────────────────── */
 :root {
-  --bg-deep:       #fcf9f2;
-  --bg-mid:        #f3ede0;
+  --bg-deep:       #f4efe6;
+  --bg-mid:        #eae2d3;
   --bg-card:       #ffffff;
-  --gold:          #b28629;
-  --gold-light:    #c49a3f;
-  --gold-glow:     #d4af3733;
-  --purple:        #5a3a99;
-  --purple-light:  #7552bb;
-  --purple-glow:   #5a3a9922;
-  --teal:          #0b8079;
+  --gold:          #b87a00;
+  --gold-light:    #d89b1c;
+  --gold-glow:     #b87a0033;
+  --purple:        #51247a;
+  --purple-light:  #7038a1;
+  --purple-glow:   #51247a22;
+  --teal:          #08756f;
   --teal-light:    #0faba2;
   --red-dark:      #991f1f;
-  --text-primary:  #2d1e57;
-  --text-muted:    #6b5a8e;
-  --glass:         rgba(255,255,255,0.7);
-  --glass-border:  rgba(178,134,41,0.25);
+  --text-primary:  #170b2b;
+  --text-muted:    #4d3a66;
+  --glass:         rgba(255, 255, 255, 0.55);
+  --glass-border:  rgba(184, 122, 0, 0.3);
   --card-w:        200px;
   --card-h:        340px;
   --radius:        12px;
@@ -72,9 +72,8 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(130,43,189,0.05) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(178,134,41,0.05) 0%, transparent 70%),
-    radial-gradient(ellipse 100% 60% at 50% 50%, rgba(255,255,255,0.5) 0%, transparent 100%);
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(81, 36, 122, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(184, 122, 0, 0.08) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -112,7 +111,7 @@ h1 {
   font-family: 'Cinzel Decorative', serif;
   font-size: clamp(2rem, 5vw, 3.8rem);
   font-weight: 700;
-  background: linear-gradient(135deg, var(--gold-light), var(--gold), #8a631c, var(--gold-light));
+  background: linear-gradient(135deg, #b87a00, #805000, #5c3900, #b87a00);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
