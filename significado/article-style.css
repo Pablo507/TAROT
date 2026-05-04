@@ -151,8 +151,8 @@ article a:hover {
 }
 
 .faq-item {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(201,168,76,0.15);
+  background: rgba(0,0,0,0.03);
+  border: 1px solid rgba(178,134,41,0.2);
   border-radius: 12px;
   padding: 1.5rem 2rem;
   margin-bottom: 1rem;
@@ -223,26 +223,3 @@ article a:hover {
   }
 }
 
-/* Stars Background Helper */
-#starfield {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: var(--bg-deep);
-}
-
-.star {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.5;
-  animation: twinkle var(--dur) infinite alternate;
-  animation-delay: var(--delay);
-}
-
-@keyframes twinkle {
-  from { opacity: 0.2; transform: scale(1); }
-  to { opacity: 1; transform: scale(1.5); }
-}
