@@ -501,7 +501,7 @@ function showOracleIntro() {
 
 // ─── INIT ─────────────────────────────────────────────────────
 function init() {
-  buildStarfield();
+  // buildStarfield();
   setupSpreadButtons();
   setupEvents();
   showOracleIntro();
