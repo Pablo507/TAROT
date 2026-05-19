@@ -67,6 +67,34 @@
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- BreadcrumbList Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Inicio",
+        "item": "https://www.tarotgratis.online/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Significado de los Arcanos",
+        "item": "https://www.tarotgratis.online/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "El Emperador",
+        "item": "https://www.tarotgratis.online/significado/el-emperador/"
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
     <div id="app" class="article-page">
@@ -120,17 +148,5 @@
     </div>
 
     <!-- Scripts for background only -->
-    <script>
-      const field = document.getElementById('starfield');
-      for(let i=0; i<100; i++) {
-        const s = document.createElement('div');
-        s.className = 'star';
-        s.style.left = Math.random()*100 + '%';
-        s.style.top = Math.random()*100 + '%';
-        s.style.setProperty('--dur', (Math.random()*3 + 3) + 's');
-        s.style.setProperty('--delay', Math.random()*5 + 's');
-        field.appendChild(s);
-      }
-    </script>
 </body>
 </html>

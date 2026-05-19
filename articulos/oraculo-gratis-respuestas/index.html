@@ -237,18 +237,5 @@
 
     <footer>✦ Oráculo del Tarot — Guía de los Arcanos ✦</footer>
   </div>
-
-  <script>
-    const field = document.getElementById('starfield');
-    for(let i=0; i<100; i++){
-      const s=document.createElement('div');
-      s.className='star';
-      s.style.left=Math.random()*100+'%';
-      s.style.top=Math.random()*100+'%';
-      s.style.setProperty('--dur',(Math.random()*3+3)+'s');
-      s.style.setProperty('--delay',Math.random()*5+'s');
-      field.appendChild(s);
-    }
-  </script>
 </body>
 </html>
