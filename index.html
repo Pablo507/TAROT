@@ -98,6 +98,43 @@
 
   <!-- Container for Dynamic Structured Data -->
   <script id="dynamic-schema" type="application/ld+json"></script>
+
+  <!-- Organization Schema (E-E-A-T) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "TarotGratis.Online",
+    "url": "https://www.tarotgratis.online",
+    "logo": "https://www.tarotgratis.online/social-preview.png",
+    "description": "Oráculo del tarot gratis online con inteligencia artificial. Lecturas de cartas personalizadas en español, sin registro ni pago.",
+    "sameAs": [
+      "https://ko-fi.com/tarotai"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "availableLanguage": "Spanish"
+    }
+  }
+  </script>
+
+  <!-- BreadcrumbList Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Inicio",
+        "item": "https://www.tarotgratis.online/"
+      }
+    ]
+  }
+  </script>
+
 <link rel="canonical" href="https://www.tarotgratis.online/" />
 </head>
 
@@ -348,6 +385,11 @@
         <div class="seo-section">
           <h3>Guías y Lecturas de Tarot</h3>
           <div class="seo-grid-articulos">
+            <a href="/articulos/tarot-si-o-no-gratis/">Tarot Sí o No Gratis</a>
+            <a href="/articulos/carta-del-dia-tarot-gratis/">Carta del Día</a>
+            <a href="/articulos/tarot-gratis-3-cartas/">Tarot 3 Cartas</a>
+            <a href="/articulos/cruz-celta-tarot-significado/">Cruz Celta Tarot</a>
+            <a href="/articulos/tarot-del-amor-preguntas/">Preguntas de Amor</a>
             <a href="/articulos/tarot-oraculo-gratis/">Tarot del Oráculo Gratis</a>
             <a href="/articulos/oraculo-gratis-online/">Oráculo Gratis Online</a>
             <a href="/articulos/tarot-ia-gratis-online/">Tarot IA Gratis Online</a>
