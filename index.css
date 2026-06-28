@@ -6,24 +6,24 @@
 
 /* ─── CSS VARIABLES ─────────────────────────────────────────── */
 :root {
-  --bg-deep:       #f4efe6;
-  --bg-mid:        #eae2d3;
-  --bg-card:       #ffffff;
-  --gold:          #b87a00;
-  --gold-light:    #d89b1c;
-  --gold-glow:     #b87a0033;
-  --purple:        #51247a;
-  --purple-light:  #7038a1;
-  --purple-glow:   #51247a22;
-  --teal:          #08756f;
-  --teal-light:    #0faba2;
+  --bg-deep:       #1e143b;
+  --bg-mid:        #2d1e57;
+  --bg-card:       #3c2872;
+  --gold:          #c9a84c;
+  --gold-light:    #f0d080;
+  --gold-glow:     #ffd70066;
+  --purple:        #822bbd;
+  --purple-light:  #b66df8;
+  --purple-glow:   #b66df833;
+  --teal:          #0faba2;
+  --teal-light:    #3de3cf;
   --red-dark:      #991f1f;
-  --text-primary:  #170b2b;
-  --text-muted:    #4d3a66;
-  --glass:         rgba(255, 255, 255, 0.55);
-  --glass-border:  rgba(184, 122, 0, 0.3);
-  --card-w:        200px;
-  --card-h:        340px;
+  --text-primary:  #fdf8f0;
+  --text-muted:    #a093b0;
+  --glass:         rgba(255,255,255,0.08);
+  --glass-border:  rgba(201,168,76,0.3);
+  --card-w:        160px;
+  --card-h:        280px;
   --radius:        12px;
   --transition:    0.4s cubic-bezier(0.4,0,0.2,1);
 }
@@ -72,8 +72,9 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(81, 36, 122, 0.08) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(184, 122, 0, 0.08) 0%, transparent 70%);
+    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(107,33,168,0.2) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(13,148,136,0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 100% 60% at 50% 50%, rgba(21,11,43,0.3) 0%, transparent 100%);
   pointer-events: none;
   z-index: 0;
 }
@@ -111,7 +112,7 @@ h1 {
   font-family: 'Cinzel Decorative', serif;
   font-size: clamp(2rem, 5vw, 3.8rem);
   font-weight: 700;
-  background: linear-gradient(135deg, #b87a00, #805000, #5c3900, #b87a00);
+  background: linear-gradient(135deg, var(--gold-light), var(--gold), #b8860b, var(--gold-light));
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -146,8 +147,8 @@ h1 {
   position: relative;
   overflow: hidden;
   box-shadow: 
-    0 10px 40px rgba(45,30,87,0.06),
-    0 0 0 1px rgba(255,255,255,0.5) inset;
+    0 10px 40px rgba(0,0,0,0.3),
+    0 0 0 1px rgba(255,255,255,0.05) inset;
 }
 
 .panel::before {
@@ -267,7 +268,7 @@ h1 {
   background: linear-gradient(135deg, #4c1d95, #6b21a8, #7c3aed);
   border: 1px solid var(--purple-light);
   border-radius: 50px;
-  color: #ffffff;
+  color: var(--text-primary);
   font-family: 'Cinzel', serif;
   font-size: 1rem;
   letter-spacing: 0.15em;
@@ -368,6 +369,12 @@ h1 {
   transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+@media (max-width: 600px) {
+  :root {
+    --card-w: 130px;
+    --card-h: 230px;
+  }
+}
 
 .card-inner {
   width: 100%;
@@ -432,6 +439,7 @@ h1 {
   background: linear-gradient(160deg, #1a0040, #0a0020);
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .card-front-inner {
@@ -873,7 +881,7 @@ footer {
 
 /* ─── RESPONSIVE ─────────────────────────────────────────────── */
 @media (max-width: 600px) {
-  :root { --card-w: 140px; --card-h: 238px; }
+  :root { --card-w: 100px; --card-h: 168px; }
   #app { padding: 0 1rem 3rem; }
   .panel { padding: 1.25rem; }
   #draw-btn { padding: 1rem 2rem; font-size: 0.9rem; }
@@ -1306,55 +1314,3 @@ footer {
   100% { box-shadow: 0 0 0 0 transparent; }
 }
 
-
-/* ─── SEO DIRECTORY ────────────────────────────────────────── */
-.seo-directory {
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-  margin-top: 1.5rem;
-  text-align: left;
-}
-
-.seo-section h3 {
-  font-family: 'Cinzel', serif;
-  font-size: 0.95rem;
-  color: var(--gold);
-  margin-bottom: 1.5rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  border-bottom: 1px solid rgba(201,168,76,0.2);
-  padding-bottom: 0.5rem;
-  display: inline-block;
-}
-
-.seo-grid-arcanos, .seo-grid-articulos {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1rem;
-}
-
-.seo-grid-arcanos a, .seo-grid-articulos a {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: all var(--transition);
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid transparent;
-  display: block;
-}
-
-.seo-grid-arcanos a:hover, .seo-grid-articulos a:hover {
-  color: var(--gold-light);
-  background: rgba(201,168,76,0.05);
-  border-color: rgba(201,168,76,0.3);
-  transform: translateX(5px);
-}
-
-@media (max-width: 600px) {
-  .seo-grid-arcanos, .seo-grid-articulos {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
