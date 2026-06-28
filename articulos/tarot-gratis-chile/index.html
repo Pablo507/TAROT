@@ -6,8 +6,8 @@
     <title>Tarot Gratis Chile 2026 - Lectura de Arcanos Online</title>
     <meta name="description" content="Tarot gratis online para Chile en 2026. Consulta tus cartas sin costo desde Santiago, Valparaíso, Concepción y todo el país. Interpretaciones precisas en español.">
     <link rel="canonical" href="https://www.tarotgratis.online/articulos/tarot-gratis-chile/" />
-    <link rel="stylesheet" href="../../index.css">
-    <link rel="stylesheet" href="../../significado/article-style.css">
+    <link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="/significado/article-style.css">
     
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -18,14 +18,19 @@
   "description": "Tarot gratis online para Chile en 2026. Consulta tus cartas sin costo desde Santiago, Valparaíso, Concepción y todo el país. Interpretaciones precisas en español.",
   "author": {
     "@type": "Organization",
-    "name": "Oráculo del Tarot"
+    "name": "Oráculo del Tarot",
+    "url": "https://www.tarotgratis.online"
   },
   "publisher": {
     "@type": "Organization",
     "name": "Oráculo del Tarot",
     "url": "https://www.tarotgratis.online"
   },
+  "datePublished": "2026-04-14",
   "dateModified": "2026-04-14",
+  "inLanguage": "es",
+  "url": "https://www.tarotgratis.online/articulos/tarot-gratis-chile/",
+  "image": "https://www.tarotgratis.online/social-preview.png",
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "https://www.tarotgratis.online/articulos/tarot-gratis-chile/"
@@ -35,36 +40,9 @@
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-
-  <!-- BreadcrumbList Schema -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Inicio",
-        "item": "https://www.tarotgratis.online/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Guías y Lecturas",
-        "item": "https://www.tarotgratis.online/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Tarot Gratis Chile",
-        "item": "https://www.tarotgratis.online/articulos/tarot-gratis-chile/"
-      }
-    ]
-  }
-  </script>
 </head>
 <body>
+    <div id="starfield"></div>
     <div id="app" class="article-page">
         <header>
             <a href="/" class="back-link">🔮 Volver al Oráculo</a>
@@ -138,5 +116,18 @@
             ✦ Oráculo del Tarot — Guía de los Arcanos ✦
         </footer>
     </div>
+
+    <script>
+      const field = document.getElementById('starfield');
+      for(let i=0; i<100; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        s.style.left = Math.random()*100 + '%';
+        s.style.top = Math.random()*100 + '%';
+        s.style.setProperty('--dur', (Math.random()*3 + 3) + 's');
+        s.style.setProperty('--delay', Math.random()*5 + 's');
+        field.appendChild(s);
+      }
+    </script>
 </body>
 </html>
