@@ -22,8 +22,8 @@
   --text-muted:    #7A6040;
   --glass:         rgba(255,248,232,0.75);
   --glass-border:  rgba(184,144,46,0.35);
-  --card-w:        160px;
-  --card-h:        280px;
+  --card-w:        190px;
+  --card-h:        330px;
   --radius:        12px;
   --transition:    0.4s cubic-bezier(0.4,0,0.2,1);
 }
@@ -372,8 +372,8 @@ h1 {
 
 @media (max-width: 600px) {
   :root {
-    --card-w: 130px;
-    --card-h: 230px;
+    --card-w: 150px;
+    --card-h: 265px;
   }
 }
 
@@ -455,7 +455,7 @@ h1 {
 }
 
 .card-symbol {
-  font-size: 3.8rem;
+  font-size: 4.5rem;
   filter: drop-shadow(0 0 15px currentColor);
   line-height: 1;
   margin-bottom: 0.5rem;
@@ -471,7 +471,7 @@ h1 {
 
 .card-name {
   font-family: 'Cinzel', serif;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--gold-light);
   line-height: 1.2;
@@ -882,7 +882,7 @@ footer {
 
 /* ─── RESPONSIVE ─────────────────────────────────────────────── */
 @media (max-width: 600px) {
-  :root { --card-w: 100px; --card-h: 168px; }
+  :root { --card-w: 130px; --card-h: 220px; }
   #app { padding: 0 1rem 3rem; }
   .panel { padding: 1.25rem; }
   #draw-btn { padding: 1rem 2rem; font-size: 0.9rem; }
@@ -1314,3 +1314,4 @@ footer {
   70% { box-shadow: 0 0 0 10px transparent; }
   100% { box-shadow: 0 0 0 0 transparent; }
 }
+
