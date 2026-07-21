@@ -510,13 +510,13 @@ document.addEventListener('DOMContentLoaded', init);
 // ─── WHATSAPP LEAD CAPTURE ────────────────────────────────────
 window.activarLeadCapture = function () {
   // OCULTO POR RECHAZO DE CUENTA LS
-  /*
+  
   const panel = document.getElementById('lead-panel');
   if (!panel || panel.dataset.shown) return;
   panel.style.display = 'block';
   panel.dataset.shown = '1';
   setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
-  */
+  
 };
 
 (function initLeadForm() {
