@@ -403,11 +403,11 @@ async function onDraw() {
       updateDynamicRecommendation(cards);
       els.offeringPanel.style.display = 'block';
       els.offeringPanel.scrollIntoView({ behavior: 'smooth' });
-      /* ── Lead capture WhatsApp - OCULTO ──
+      
       if (typeof window.activarLeadCapture === 'function') {
         window.activarLeadCapture();
       }
-      */
+      
     }, 500);
 
   } catch (err) {
