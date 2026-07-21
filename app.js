@@ -524,12 +524,25 @@ window.activarLeadCapture = function () {
     const btn = document.getElementById('lead-submit-btn');
     if (!btn) return;
 
+    // Mostrar mensaje si PayPal redirigió de vuelta
+    const urlParams = new URLSearchParams(window.location.search);
+    const paypalStatus = urlParams.get('paypal');
+    const feedback = document.getElementById('lead-feedback');
+    if (paypalStatus === 'success') {
+      showFeedback(feedback,
+        '🎉 ¡Suscripción activada! Mañana recibís tu primera lectura por WhatsApp 🔮',
+        'success');
+    } else if (paypalStatus === 'cancelled') {
+      showFeedback(feedback, 'El pago fue cancelado. Podés intentarlo de nuevo.', 'error');
+    } else if (paypalStatus === 'error') {
+      showFeedback(feedback, 'Hubo un error. Por favor intentá de nuevo.', 'error');
+    }
+
     btn.addEventListener('click', async function () {
       const name     = document.getElementById('lead-name').value.trim();
       const country  = document.getElementById('lead-country').value;
       const rawPhone = document.getElementById('lead-phone').value.replace(/\D/g, '');
       const consent  = document.getElementById('lead-consent').checked;
-      const feedback = document.getElementById('lead-feedback');
 
       if (!rawPhone) {
         showFeedback(feedback, 'Ingresá tu número de WhatsApp', 'error'); return;
@@ -538,43 +551,37 @@ window.activarLeadCapture = function () {
         showFeedback(feedback, 'Necesitamos tu aceptación para enviarte mensajes', 'error'); return;
       }
 
-      const phone = country + rawPhone;
       btn.disabled = true;
       document.getElementById('lead-btn-text').textContent = 'Preparando pago…';
+      showFeedback(feedback, '✦ Conectando con PayPal…', 'success');
 
       try {
-        // Llama a la API para crear el checkout de Lemon Squeezy
-        const resp = await fetch('/api/create-subscription', {
+        // Llamar a la API de PayPal
+        const resp = await fetch('/api/create-paypal-subscription', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phone: rawPhone, name: name || null, country })
         });
         const data = await resp.json();
+
         if (resp.ok && data.checkout_url) {
-          // Abrir el checkout de Lemon Squeezy en modo overlay (o redirect si no carga JS)
-          showFeedback(feedback, '✦ Preparando pago seguro…', 'success');
-          
-          if (window.LemonSqueezy) {
-            window.LemonSqueezy.Url.Open(data.checkout_url);
-            btn.disabled = false;
-            document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $15/año';
-          } else {
-            // Fallback a redirección si el script no cargó
-            setTimeout(() => { window.location.href = data.checkout_url; }, 800);
-          }
+          // Redirigir a PayPal para aprobar la suscripción
+          showFeedback(feedback, '✦ Redirigiendo a PayPal…', 'success');
+          setTimeout(() => { window.location.href = data.checkout_url; }, 600);
         } else {
-          showFeedback(feedback, data.error || 'Error al crear el checkout', 'error');
+          showFeedback(feedback, data.error || 'Error al crear el pago', 'error');
           btn.disabled = false;
-          document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $15/año';
+          document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $4.99/mes';
         }
       } catch (e) {
         showFeedback(feedback, 'Error de conexión. Intentá de nuevo.', 'error');
         btn.disabled = false;
-        document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $15/año';
+        document.getElementById('lead-btn-text').textContent = '🔮 Suscribirme por $4.99/mes';
       }
     });
 
     function showFeedback(el, msg, tipo) {
+      if (!el) return;
       el.textContent = msg;
       el.className = tipo;
       el.style.display = 'block';
