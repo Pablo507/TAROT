@@ -59,6 +59,9 @@ alter table subscribers
   add column if not exists mp_status       text,
   add column if not exists ls_order_id     text,
   add column if not exists ls_event        text,
+  add column if not exists paypal_subscription_id text,
+  add column if not exists activated_at    timestamptz,
+  add column if not exists last_payment_at timestamptz,
   add column if not exists updated_at      timestamptz default now();
 
 -- Índice para buscar por preapproval_id desde el webhook
@@ -66,6 +69,9 @@ create index if not exists idx_subscribers_mp on subscribers(mp_preapproval_id);
 
 -- Índice para buscar por ls_order_id desde el webhook
 create index if not exists idx_subscribers_ls on subscribers(ls_order_id);
+
+-- Índice para buscar por paypal_subscription_id desde el webhook
+create index if not exists idx_subscribers_paypal on subscribers(paypal_subscription_id);
 
 -- Comentarios para documentar los estados posibles
 comment on column subscribers.status is 'pending | active | paused | cancelled';

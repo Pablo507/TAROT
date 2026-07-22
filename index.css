@@ -356,7 +356,8 @@ h1 {
   font-size: 0.7rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-primary);
+  font-weight: 600;
   text-align: center;
   max-width: var(--card-w);
 }
@@ -465,8 +466,7 @@ h1 {
   font-family: 'Cinzel', serif;
   font-size: 0.6rem;
   letter-spacing: 0.2em;
-  color: var(--gold);
-  opacity: 0.8;
+  color: var(--gold-light);
 }
 
 .card-name {
@@ -481,7 +481,7 @@ h1 {
 
 .card-arcana {
   font-size: 0.65rem;
-  color: var(--text-muted);
+  color: rgba(255, 248, 232, 0.7);
   letter-spacing: 0.15em;
   text-transform: uppercase;
   margin-top: 0.2rem;
@@ -1101,7 +1101,7 @@ footer {
 #lead-panel .lead-content { padding: 0.25rem 0; }
 
 .lead-desc {
-  color: rgba(200,184,232,0.85);
+  color: var(--text-primary);
   line-height: 1.65;
   font-size: 0.95rem;
   margin-bottom: 1.4rem;
@@ -1113,8 +1113,8 @@ footer {
 
 .lead-input-group label {
   font-size: 0.83rem;
-  color: rgba(200,184,232,0.7);
-  font-weight: 500;
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 .lead-input-group input[type="text"],
@@ -1132,7 +1132,8 @@ footer {
 
 .lead-input-group input:focus {
   outline: none;
-  border-color: rgba(167,139,250,0.55);
+  border-color: var(--gold);
+  box-shadow: 0 0 10px var(--gold-glow);
 }
 
 .lead-phone-wrap { display: flex; gap: 8px; }
@@ -1155,14 +1156,14 @@ footer {
 
 .lead-phone-wrap input { flex: 1; }
 
-.lead-hint { font-size: 0.75rem; color: rgba(255,255,255,0.35); }
+.lead-hint { font-size: 0.75rem; color: var(--text-muted); }
 
 .lead-consent-row { display: flex; gap: 10px; align-items: flex-start; }
 
 .lead-consent-row input[type="checkbox"] {
   margin-top: 3px;
   flex-shrink: 0;
-  accent-color: #a78bfa;
+  accent-color: var(--gold);
   width: 16px;
   height: 16px;
   cursor: pointer;
@@ -1170,7 +1171,7 @@ footer {
 
 .lead-consent-row label {
   font-size: 0.8rem;
-  color: rgba(255,255,255,0.5);
+  color: var(--text-muted);
   line-height: 1.5;
   cursor: pointer;
 }
@@ -1213,15 +1214,15 @@ footer {
 
 .lead-privacy {
   font-size: 0.75rem;
-  color: rgba(255,255,255,0.3);
+  color: var(--text-muted);
   text-align: center;
   margin-top: 0.4rem;
 }
 
 /* ── Lead Capture: precio y beneficios ──────────────────────── */
 .lead-price-box {
-  background: rgba(167,139,250,0.12);
-  border: 1px solid rgba(167,139,250,0.3);
+  background: rgba(139, 94, 60, 0.08);
+  border: 1px solid var(--glass-border);
   border-radius: 12px;
   padding: 1rem 1.2rem;
   text-align: center;
@@ -1231,19 +1232,19 @@ footer {
 .lead-price-amount {
   font-size: 2.2rem;
   font-weight: 700;
-  color: #a78bfa;
+  color: var(--gold);
   line-height: 1.1;
 }
 
 .lead-price-period {
   font-size: 1rem;
   font-weight: 400;
-  color: rgba(167,139,250,0.7);
+  color: var(--text-muted);
 }
 
 .lead-price-desc {
   font-size: 0.78rem;
-  color: rgba(255,255,255,0.45);
+  color: var(--text-muted);
   margin-top: 4px;
 }
 
@@ -1257,7 +1258,7 @@ footer {
 
 .lead-benefits li {
   font-size: 0.88rem;
-  color: rgba(200,184,232,0.85);
+  color: var(--text-primary);
   padding-left: 0;
 }
 

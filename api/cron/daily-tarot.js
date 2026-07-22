@@ -116,7 +116,7 @@ export default async function handler(req, res) {
     // 1. Obtener todos los suscriptores activos
     const { data: subscribers, error } = await supabase
       .from('subscribers')
-      .select('id, phone, name')
+      .select('id, phone, name, sends_count')
       .eq('active', true)
 
     if (error) throw error
@@ -146,7 +146,7 @@ export default async function handler(req, res) {
         // Actualizar suscriptor
         await supabase
           .from('subscribers')
-          .update({ last_sent_at: new Date().toISOString(), sends_count: sub.sends_count + 1 })
+          .update({ last_sent_at: new Date().toISOString(), sends_count: (sub.sends_count || 0) + 1 })
           .eq('id', sub.id)
 
         enviados++
