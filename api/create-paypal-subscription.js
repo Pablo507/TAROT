@@ -42,7 +42,14 @@ async function getPayPalToken() {
   })
 
   const data = await res.json()
-  if (!data.access_token) throw new Error('No se pudo obtener token de PayPal')
+
+  if (!data.access_token) {
+    console.error('[PayPal] Error obteniendo token. Status:', res.status, 'Respuesta:', data)
+    throw new Error(
+      `No se pudo obtener token de PayPal: ${data.error || 'desconocido'} — ${data.error_description || 'sin descripción'}`
+    )
+  }
+
   return data.access_token
 }
 
