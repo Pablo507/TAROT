@@ -1,15 +1,7 @@
 // api/paypal-webhook.js
-// PayPal llama a este endpoint cuando la suscripción se activa, cancela, etc.
-// Configurar en PayPal Developer → Webhooks
-//
-// Eventos a escuchar:
-//   BILLING.SUBSCRIPTION.ACTIVATED  → activar suscriptor
-//   BILLING.SUBSCRIPTION.CANCELLED  → desactivar suscriptor
-//   BILLING.SUBSCRIPTION.SUSPENDED  → desactivar suscriptor
-//   PAYMENT.SALE.COMPLETED           → pago mensual exitoso
+// PayPal llama a este endpoint cuando la suscripción se activa, cancela, renueva, etc.
 
 import { createClient } from '@supabase/supabase-js'
-import crypto from 'crypto'
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -19,42 +11,6 @@ const supabase = createClient(
 const PAYPAL_BASE = process.env.PAYPAL_MODE === 'sandbox'
   ? 'https://api-m.sandbox.paypal.com'
   : 'https://api-m.paypal.com'
-
-// ── Verificar firma del webhook de PayPal ───────────────────────────────────
-async function verificarFirma(req, rawBody) {
-  const webhookId = process.env.PAYPAL_WEBHOOK_ID
-  if (!webhookId) {
-    console.warn('[PayPal Webhook] PAYPAL_WEBHOOK_ID no configurado — saltando verificación')
-    return true
-  }
-
-  try {
-    const token = await getPayPalToken()
-
-    const verifyRes = await fetch(`${PAYPAL_BASE}/v1/notifications/verify-webhook-signature`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        auth_algo:         req.headers['paypal-auth-algo'],
-        cert_url:          req.headers['paypal-cert-url'],
-        transmission_id:   req.headers['paypal-transmission-id'],
-        transmission_sig:  req.headers['paypal-transmission-sig'],
-        transmission_time: req.headers['paypal-transmission-time'],
-        webhook_id:        webhookId,
-        webhook_event:     JSON.parse(rawBody),
-      }),
-    })
-
-    const result = await verifyRes.json()
-    return result.verification_status === 'SUCCESS'
-  } catch (err) {
-    console.error('[PayPal Webhook] Error verificando firma:', err)
-    return false
-  }
-}
 
 async function getPayPalToken() {
   const credentials = Buffer.from(
@@ -74,33 +30,26 @@ async function getPayPalToken() {
   return data.access_token
 }
 
-// ── Handler principal ───────────────────────────────────────────────────────
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).send('Method not allowed')
   }
 
   try {
-    const rawBody = JSON.stringify(req.body)
-    const event   = req.body
+    const event = req.body
     const eventType = event.event_type
 
-    console.log(`[PayPal Webhook] evento: ${eventType}`)
+    console.log(`[PayPal Webhook] evento recibido: ${eventType}`)
 
-    // ── Extraer datos del evento ─────────────────────────────────────────────
-    const resource    = event.resource || {}
-    const customId    = resource.custom_id      // subscriber_id de Supabase
-    const ppSubId     = resource.id             // ID de suscripción PayPal
+    const resource = event.resource || {}
+    const customId = resource.custom_id      // subscriber_id de Supabase
+    const ppSubId  = resource.id             // ID de suscripción PayPal
 
-    // ── Procesar según el tipo de evento ────────────────────────────────────
     switch (eventType) {
-
       case 'BILLING.SUBSCRIPTION.ACTIVATED':
-        // Pago aprobado y suscripción activa
         if (customId) {
           await activarSuscriptor(customId, ppSubId)
         } else {
-          // Buscar por ID de suscripción PayPal si no hay custom_id
           const { data: sub } = await supabase
             .from('subscribers')
             .select('id')
@@ -113,12 +62,10 @@ export default async function handler(req, res) {
       case 'BILLING.SUBSCRIPTION.CANCELLED':
       case 'BILLING.SUBSCRIPTION.SUSPENDED':
       case 'BILLING.SUBSCRIPTION.EXPIRED':
-        // Desactivar suscriptor
         await desactivarSuscriptor(ppSubId, eventType)
         break
 
       case 'PAYMENT.SALE.COMPLETED':
-        // Pago mensual exitoso — renovar fecha
         const billingSubId = resource.billing_agreement_id
         if (billingSubId) {
           await supabase
@@ -134,20 +81,20 @@ export default async function handler(req, res) {
         break
 
       default:
-        console.log(`[PayPal Webhook] Evento no manejado: ${eventType}`)
+        console.log(`[PayPal Webhook] Evento no manejado o ignorado: ${eventType}`)
     }
 
     return res.status(200).json({ ok: true })
 
   } catch (err) {
     console.error('[PayPal Webhook] Error:', err)
-    return res.status(200).json({ ok: true }) // Siempre 200 para evitar reintentos
+    return res.status(200).json({ ok: true }) // Siempre 200 para que PayPal no reintente
   }
 }
 
 // ── Activar suscriptor en Supabase + WhatsApp ───────────────────────────────
 async function activarSuscriptor(subscriberId, ppSubId) {
-  const { error } = await supabase
+  const { data: updatedSub } = await supabase
     .from('subscribers')
     .update({
       active: true,
@@ -157,14 +104,13 @@ async function activarSuscriptor(subscriberId, ppSubId) {
       updated_at: new Date().toISOString(),
     })
     .eq('id', subscriberId)
+    .eq('active', false) // Para no chocar con paypal-success
+    .select()
 
-  if (error) {
-    console.error('[PayPal Webhook] Error activando suscriptor:', error)
-    return
+  if (updatedSub && updatedSub.length > 0) {
+    console.log(`[PayPal Webhook] Suscriptor ${subscriberId} activado via webhook`)
+    await enviarBienvenida(subscriberId)
   }
-
-  console.log(`[PayPal Webhook] Suscriptor ${subscriberId} activado`)
-  await enviarBienvenida(subscriberId)
 }
 
 // ── Desactivar suscriptor ───────────────────────────────────────────────────
@@ -182,7 +128,6 @@ async function desactivarSuscriptor(ppSubId, motivo) {
     console.error('[PayPal Webhook] Error desactivando suscriptor:', error)
     return
   }
-
   console.log(`[PayPal Webhook] Suscriptor desactivado por: ${motivo}`)
 }
 
