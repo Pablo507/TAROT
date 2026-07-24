@@ -5,7 +5,126 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 )
 
-// ── Función de bienvenida por WhatsApp con manejo de errores de Meta ──
+const PAYPAL_BASE = process.env.PAYPAL_MODE === 'sandbox'
+  ? 'https://api-m.sandbox.paypal.com'
+  : 'https://api-m.paypal.com'
+
+async function getPayPalToken() {
+  const credentials = Buffer.from(
+    `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`
+  ).toString('base64')
+
+  const res = await fetch(`${PAYPAL_BASE}/v1/oauth2/token`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Basic ${credentials}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: 'grant_type=client_credentials',
+  })
+
+  const data = await res.json()
+  return data.access_token
+}
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).send('Method not allowed')
+  }
+
+  try {
+    const event = req.body
+    const eventType = event.event_type
+
+    console.log(`[PayPal Webhook] evento recibido: ${eventType}`)
+
+    const resource = event.resource || {}
+    const customId = resource.custom_id
+    const ppSubId  = resource.id
+
+    switch (eventType) {
+      case 'BILLING.SUBSCRIPTION.ACTIVATED':
+        if (customId) {
+          await activarSuscriptor(customId, ppSubId)
+        } else {
+          const { data: sub } = await supabase
+            .from('subscribers')
+            .select('id')
+            .eq('paypal_subscription_id', ppSubId)
+            .single()
+          if (sub) await activarSuscriptor(sub.id, ppSubId)
+        }
+        break
+
+      case 'BILLING.SUBSCRIPTION.CANCELLED':
+      case 'BILLING.SUBSCRIPTION.SUSPENDED':
+      case 'BILLING.SUBSCRIPTION.EXPIRED':
+        await desactivarSuscriptor(ppSubId, eventType)
+        break
+
+      case 'PAYMENT.SALE.COMPLETED':
+        const billingSubId = resource.billing_agreement_id
+        if (billingSubId) {
+          await supabase
+            .from('subscribers')
+            .update({
+              last_payment_at: new Date().toISOString(),
+              status: 'active',
+              active: true,
+            })
+            .eq('paypal_subscription_id', billingSubId)
+          console.log(`[PayPal Webhook] Pago renovado para suscripción ${billingSubId}`)
+        }
+        break
+
+      default:
+        console.log(`[PayPal Webhook] Evento no manejado o ignorado: ${eventType}`)
+    }
+
+    return res.status(200).json({ ok: true })
+
+  } catch (err) {
+    console.error('[PayPal Webhook] Error:', err)
+    return res.status(200).json({ ok: true })
+  }
+}
+
+async function activarSuscriptor(subscriberId, ppSubId) {
+  const { data: updatedSub } = await supabase
+    .from('subscribers')
+    .update({
+      active: true,
+      status: 'active',
+      paypal_subscription_id: ppSubId,
+      activated_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', subscriberId)
+    .select()
+
+  if (updatedSub && updatedSub.length > 0) {
+    console.log(`[PayPal Webhook] Suscriptor ${subscriberId} activado via webhook`)
+    await enviarBienvenida(subscriberId)
+  }
+}
+
+async function desactivarSuscriptor(ppSubId, motivo) {
+  const { error } = await supabase
+    .from('subscribers')
+    .update({
+      active: false,
+      status: 'cancelled',
+      updated_at: new Date().toISOString(),
+    })
+    .eq('paypal_subscription_id', ppSubId)
+
+  if (error) {
+    console.error('[PayPal Webhook] Error desactivando suscriptor:', error)
+    return
+  }
+  console.log(`[PayPal Webhook] Suscriptor desactivado por: ${motivo}`)
+}
+
 async function enviarBienvenida(subscriberId) {
   const { data: sub } = await supabase
     .from('subscribers')
@@ -51,64 +170,8 @@ async function enviarBienvenida(subscriberId) {
       return
     }
 
-    console.log(`[WhatsApp] Bienvenida enviada con éxito a ${sub.phone}`)
+    console.log(`[PayPal Webhook] Bienvenida enviada a ${sub.phone}`)
   } catch (err) {
-    console.error('[WhatsApp] Excepción de red al enviar mensaje:', err)
-  }
-}
-
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST')
-    return res.status(405).end('Method Not Allowed')
-  }
-
-  try {
-    const event = req.body
-    console.log('[PayPal Webhook Event]:', event.event_type)
-
-    const resource = event.resource
-    const subscriptionId = resource.id || resource.billing_agreement_id
-
-    if (!subscriptionId) {
-      return res.status(200).json({ received: true, note: 'No subscription ID found in event' })
-    }
-
-    // Activar suscripción en eventos de PayPal
-    if (
-      event.event_type === 'BILLING.SUBSCRIPTION.ACTIVATED' ||
-      event.event_type === 'PAYMENT.SALE.COMPLETED'
-    ) {
-      const { data: subscriber } = await supabase
-        .from('subscribers')
-        .select('*')
-        .eq('paypal_subscription_id', subscriptionId)
-        .single()
-
-      if (subscriber && subscriber.status !== 'active') {
-        await supabase
-          .from('subscribers')
-          .update({ status: 'active' })
-          .eq('id', subscriber.id)
-
-        await enviarBienvenida(subscriber.id)
-      }
-    }
-
-    // Manejar cancelación / suspensión
-    if (
-      event.event_type === 'BILLING.SUBSCRIPTION.CANCELLED' ||
-      event.event_type === 'BILLING.SUBSCRIPTION.SUSPENDED'
-    ) {
-      await supabase
-        .from('subscribers')
-        .update({ status: 'cancelled' })
-        .eq('paypal_subscription_id', subscriptionId)
-    }
-
-    return res.status(200).json({ received: true })
-  } catch (err) {
-    console.error('[PayPal Webhook Error]:', err)
-    return res.status(500).json({ error: 'Webhook handler failed' })
+    console.error('[PayPal Webhook] Error enviando WhatsApp:', err)
   }
 }
