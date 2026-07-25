@@ -100,9 +100,9 @@ async function procesarMensaje(msg, metadata) {
     return
   }
 
-  // ── Otros mensajes: respuesta automática ──
+  // ── Otros mensajes: respuesta automática (URL corregida) ──
   await enviarRespuesta(waPhoneId, msg.from,
-    '✦ Oráculo del Tarot IA\n\nRecibís tu lectura diaria cada mañana 🌙\n\n_Responde *STOP* para darte de baja_\n_Hacé tu lectura completa en: oraculotarot.com_'
+    '✦ Oráculo del Tarot IA\n\nRecibís tu lectura diaria cada mañana 🌙\n\n_Responde *STOP* para darte de baja_\n_Hacé tu lectura completa en: https://www.tarotgratis.online_'
   )
 }
 

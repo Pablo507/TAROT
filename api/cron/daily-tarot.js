@@ -26,13 +26,12 @@ const ARCANOS = [
 ]
 
 function cartaDelDia() {
-  // Misma carta para todos hoy (más coherente), basada en la fecha
   const hoy = new Date()
   const idx = (hoy.getFullYear() + hoy.getMonth() + hoy.getDate()) % ARCANOS.length
   return ARCANOS[idx]
 }
 
-// ── Generar mensaje con Groq ─────────────────────────────────
+// ── Generar mensaje con Groq (URL corregida en prompt y pie de página) ──
 async function generarMensaje(carta, nombre) {
   const saludo = nombre ? `Hola ${nombre.split(' ')[0]}` : 'Hola'
 
@@ -42,7 +41,7 @@ El mensaje debe:
 - Empezar con "✦ Tu carta de hoy: *${carta}*"
 - Tener máximo 200 palabras
 - Ser místico, positivo y personal
-- Terminar con "Para una lectura completa gratuita → [URL]"
+- Terminar con "Para una lectura completa gratuita → https://www.tarotgratis.online"
 - Incluir un consejo práctico para el día
 - NO usar asteriscos dobles (**), solo simples (*) para negrita de WhatsApp
 - Incluir 2-3 emojis relevantes
@@ -58,12 +57,11 @@ Responde SOLO el mensaje, sin comillas ni explicaciones.`
   })
 
   const texto = resp.choices[0].message.content.trim()
-  return `${saludo} 🌙\n\n${texto}\n\n_Oráculo del Tarot IA • oraculotarot.com_`
+  return `${saludo} 🌙\n\n${texto}\n\n_Oráculo del Tarot IA • https://www.tarotgratis.online_`
 }
 
 // ── Enviar mensaje por WhatsApp Cloud API ────────────────────
 async function enviarWhatsApp(phone, mensaje) {
-  // Quitar el + del phone para la API
   const waPhone = phone.replace('+', '')
 
   const body = {
@@ -95,12 +93,11 @@ async function enviarWhatsApp(phone, mensaje) {
     throw new Error(data?.error?.message || `WhatsApp API error ${resp.status}`)
   }
 
-  return data?.messages?.[0]?.id  // wa_message_id
+  return data?.messages?.[0]?.id
 }
 
 // ── Handler principal ────────────────────────────────────────
 export default async function handler(req, res) {
-  // Seguridad: verificar que viene de Vercel Cron o de nosotros
   const authHeader = req.headers.authorization
   if (authHeader !== `Bearer ${CRON_SECRET}`) {
     return res.status(401).json({ error: 'Unauthorized' })
@@ -113,7 +110,6 @@ export default async function handler(req, res) {
   console.log(`[Cron] Iniciando. Carta del día: ${carta}`)
 
   try {
-    // 1. Obtener todos los suscriptores activos
     const { data: subscribers, error } = await supabase
       .from('subscribers')
       .select('id, phone, name, sends_count')
@@ -122,11 +118,8 @@ export default async function handler(req, res) {
     if (error) throw error
     console.log(`[Cron] ${subscribers.length} suscriptores activos`)
 
-    // 2. Generar mensaje (uno para todos, cambia el saludo)
-    // Generamos un mensaje base y personalizamos el saludo
     const mensajeBase = await generarMensaje(carta, null)
 
-    // 3. Enviar a cada suscriptor con delay para no saturar la API
     for (const sub of subscribers) {
       try {
         const nombre = sub.name
@@ -135,7 +128,6 @@ export default async function handler(req, res) {
 
         const waId = await enviarWhatsApp(sub.phone, mensaje)
 
-        // Log exitoso
         await supabase.from('send_log').insert({
           subscriber_id: sub.id,
           card: carta,
@@ -143,15 +135,12 @@ export default async function handler(req, res) {
           wa_message_id: waId
         })
 
-        // Actualizar suscriptor
         await supabase
           .from('subscribers')
           .update({ last_sent_at: new Date().toISOString(), sends_count: (sub.sends_count || 0) + 1 })
           .eq('id', sub.id)
 
         enviados++
-
-        // Rate limit: esperar 100ms entre mensajes (600/min máx en WhatsApp)
         await new Promise(r => setTimeout(r, 100))
 
       } catch (err) {
