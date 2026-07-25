@@ -27,12 +27,43 @@ async function getPayPalToken() {
   return data.access_token
 }
 
+// Verifica que el evento realmente venga de PayPal (evita activaciones falsas)
+async function verificarFirma(req, accessToken) {
+  const resp = await fetch(`${PAYPAL_BASE}/v1/notifications/verify-webhook-signature`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      auth_algo: req.headers['paypal-auth-algo'],
+      cert_url: req.headers['paypal-cert-url'],
+      transmission_id: req.headers['paypal-transmission-id'],
+      transmission_sig: req.headers['paypal-transmission-sig'],
+      transmission_time: req.headers['paypal-transmission-time'],
+      webhook_id: process.env.PAYPAL_WEBHOOK_ID,
+      webhook_event: req.body,
+    }),
+  })
+
+  const data = await resp.json()
+  return data.verification_status === 'SUCCESS'
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).send('Method not allowed')
   }
 
   try {
+    const accessToken = await getPayPalToken()
+    const firmaValida = await verificarFirma(req, accessToken)
+
+    if (!firmaValida) {
+      console.warn('[PayPal Webhook] Firma inválida — evento descartado')
+      return res.status(401).send('Unauthorized')
+    }
+
     const event = req.body
     const eventType = event.event_type
 
