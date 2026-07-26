@@ -1,6 +1,10 @@
 // api/cron/daily-tarot.js — Vercel Cron Job
 // Se activa automáticamente cada día a las 9 AM (UTC-3 = 12:00 UTC)
 // Configurar en vercel.json: { "crons": [{ "path": "/api/cron/daily-tarot", "schedule": "0 12 * * *" }] }
+//
+// IMPORTANTE: usa la plantilla "carta_diaria" aprobada en Meta Business Manager.
+// Los mensajes proactivos (sin que el usuario haya escrito en las últimas 24hs)
+// SOLO se pueden enviar como template — texto libre se rechaza con error 131047.
 
 import { createClient } from '@supabase/supabase-js'
 import Groq from 'groq-sdk'
@@ -31,23 +35,17 @@ function cartaDelDia() {
   return ARCANOS[idx]
 }
 
-// ── Generar mensaje con Groq (URL corregida en prompt y pie de página) ──
-async function generarMensaje(carta, nombre) {
-  const saludo = nombre ? `Hola ${nombre.split(' ')[0]}` : 'Hola'
-
-  const prompt = `Genera un mensaje de WhatsApp de tarot diario. Carta: "${carta}". 
-  
-El mensaje debe:
-- Empezar con "✦ Tu carta de hoy: *${carta}*"
-- Tener máximo 200 palabras
-- Ser místico, positivo y personal
-- Terminar con "Para una lectura completa gratuita → https://www.tarotgratis.online"
-- Incluir un consejo práctico para el día
-- NO usar asteriscos dobles (**), solo simples (*) para negrita de WhatsApp
-- Incluir 2-3 emojis relevantes
-- Terminar con: "_Responde STOP para dejar de recibir lecturas_"
-
-Responde SOLO el mensaje, sin comillas ni explicaciones.`
+// ── Generar SOLO la interpretación + consejo con Groq ────────
+// El saludo, el llamado a la lectura gratuita y el pie de "STOP" ahora
+// son texto FIJO de la plantilla de Meta — Groq solo escribe la parte
+// que cambia día a día, y acotada en longitud para no romper la plantilla.
+async function generarInterpretacion(carta) {
+  const prompt = `Escribe la interpretación del tarot para la carta "${carta}" como
+mensaje de WhatsApp diario. Máximo 500 caracteres (estricto, no te pases).
+Debe ser místico, positivo y personal, e incluir un consejo práctico concreto para el día.
+NO uses saludos ("Hola"), NO uses despedidas, NO uses links, NO uses asteriscos dobles (**),
+solo simples (*) para negrita de WhatsApp. Incluí 2-3 emojis relevantes como máximo.
+Responde SOLO el texto, sin comillas ni explicaciones.`
 
   const resp = await groq.chat.completions.create({
     model: 'llama-3.3-70b-versatile',
@@ -56,22 +54,49 @@ Responde SOLO el mensaje, sin comillas ni explicaciones.`
     max_tokens: 400,
   })
 
-  const texto = resp.choices[0].message.content.trim()
-  return `${saludo} 🌙\n\n${texto}\n\n_Oráculo del Tarot IA • https://www.tarotgratis.online_`
+  let texto = resp.choices[0].message.content.trim()
+
+  // Cinturón de seguridad: la plantilla se cae si la variable es muy larga
+  if (texto.length > 500) texto = texto.slice(0, 497) + '...'
+
+  return texto
 }
 
-// ── Enviar mensaje por WhatsApp Cloud API ────────────────────
-async function enviarWhatsApp(phone, mensaje) {
+// ── Enviar mensaje por WhatsApp usando la plantilla aprobada ─
+// La plantilla "carta_diaria" debe tener este cuerpo en Meta Business Manager:
+//
+//   Hola {{1}} 🌙
+//
+//   ✦ Tu carta de hoy: *{{2}}*
+//
+//   {{3}}
+//
+//   Para una lectura completa gratuita → https://www.tarotgratis.online
+//
+//   _Responde STOP para dejar de recibir lecturas_
+//
+async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
   const waPhone = phone.replace('+', '')
+  const saludo = nombre ? nombre.split(' ')[0] : 'amigo/a'
 
   const body = {
     messaging_product: 'whatsapp',
     recipient_type: 'individual',
     to: waPhone,
-    type: 'text',
-    text: {
-      preview_url: false,
-      body: mensaje
+    type: 'template',
+    template: {
+      name: 'carta_diaria',
+      language: { code: 'es_UY' },
+      components: [
+        {
+          type: 'body',
+          parameters: [
+            { type: 'text', text: saludo },
+            { type: 'text', text: carta },
+            { type: 'text', text: interpretacion }
+          ]
+        }
+      ]
     }
   }
 
@@ -118,15 +143,12 @@ export default async function handler(req, res) {
     if (error) throw error
     console.log(`[Cron] ${subscribers.length} suscriptores activos`)
 
-    const mensajeBase = await generarMensaje(carta, null)
+    // La interpretación se genera UNA sola vez (misma carta para todos hoy)
+    const interpretacion = await generarInterpretacion(carta)
 
     for (const sub of subscribers) {
       try {
-        const nombre = sub.name
-        const saludo = nombre ? `Hola ${nombre.split(' ')[0]} 🌙` : 'Hola 🌙'
-        const mensaje = mensajeBase.replace('Hola 🌙', saludo)
-
-        const waId = await enviarWhatsApp(sub.phone, mensaje)
+        const waId = await enviarWhatsApp(sub.phone, sub.name, carta, interpretacion)
 
         await supabase.from('send_log').insert({
           subscriber_id: sub.id,
