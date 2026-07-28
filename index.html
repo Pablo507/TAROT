@@ -1,398 +1,56 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8SPXC4MYBT"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-8SPXC4MYBT');
-  </script>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tarot Gratis Online — Lectura Inmediata para tu Signo | Oráculo del Tarot</title>
-  <meta name="description"
-    content="Tarot gratis online con respuesta inmediata. Lecturas personalizadas para Virgo, Tauro, Acuario y los 12 signos del zodíaco. Sin registro, sin esperas, con IA.">
-  <meta name="keywords"
-    content="tarot gratis, tarot hoy, lectura de tarot gratis, tarot virgo hoy, tarot tauro hoy, tarot acuario hoy, oraculo gratis, tarot gratis online respuesta inmediata, lectura de cartas gratis">
-
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.tarotgratis.online/">
-  <meta property="og:title" content="Tarot Gratis Online — Lectura Inmediata para tu Signo">
-  <meta property="og:description"
-    content="Tarot gratis online con respuesta inmediata. Lecturas personalizadas para Virgo, Tauro, Acuario y los 12 signos del zodíaco. Sin registro, sin esperas, con IA.">
-  <meta property="og:image" content="https://www.tarotgratis.online/social-preview.png">
-
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://www.tarotgratis.online/">
-  <meta property="twitter:title" content="Tarot Gratis Online — Lectura Inmediata para tu Signo">
-  <meta property="twitter:description"
-    content="Tarot gratis online con respuesta inmediata. Lecturas personalizadas para Virgo, Tauro, Acuario y los 12 signos del zodíaco. Sin registro, sin esperas, con IA.">
-  <meta property="twitter:image" content="https://www.tarotgratis.online/social-preview.png">
-
-  <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>">
-  <link rel="stylesheet" href="index.css">
-
-  <!-- Static Structured Data (Schema.org) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Oráculo del Tarot Gratis Online",
-    "url": "https://www.tarotgratis.online/",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://www.tarotgratis.online/?q={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Oráculo del Tarot Gratis Online con IA",
-    "operatingSystem": "All",
-    "applicationCategory": "EsotericApplication",
-    "description": "El oráculo de tarot gratis más avanzado de 2026. Obtén lecturas de cartas personalizadas al instante con Inteligencia Artificial.",
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "ratingCount": "1540"
-    },
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    }
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [{
-      "@type": "Question",
-      "name": "¿El oráculo del tarot gratis es realmente fiable?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Sí, nuestro oráculo utiliza Inteligencia Artificial de última generación (2026) para interpretar los arcanos mayores en base a tu consulta específica, ofreciendo una lectura personalizada y gratuita al instante."
-      }
-    }, {
-      "@type": "Question",
-      "name": "¿Cómo puedo obtener una lectura del tarot gratis online?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Simplemente escribe tu pregunta o intención en el cuadro de texto, elige tu tirada preferida (como la de 3 cartas o la Cruz Celta) y el oráculo generará tu interpretación de inmediato."
-      }
-    }, {
-      "@type": "Question",
-      "name": "¿Qué cartas usa el oráculo gratis?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "El oráculo utiliza los 78 arcanos del tarot, incluyendo Arcanos Mayores y Menores, para ofrecer una visión completa y profunda sobre el amor, el trabajo y el destino."
-      }
-    }]
-  }
-  </script>
-
-  <!-- Container for Dynamic Structured Data -->
-  <script id="dynamic-schema" type="application/ld+json"></script>
-
-    <!-- Páginas de signos zodiacales -->
-    <link rel="prefetch" href="/signo/virgo/">
-    <link rel="prefetch" href="/signo/tauro/">
-    <link rel="prefetch" href="/signo/acuario/">
+  <title>Tarot AI - Lecturas y Consultas de Tarot</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts o estilos adicionales si los usas -->
 </head>
-
 <body>
-
-  <!-- Stars -->
-  <!-- Main App -->
-  <div id="app">
-
-    <!-- ─── HEADER ──────────────────────────────────────────── -->
+  <div class="container">
     <header>
-      <span class="header-glyph">🔮</span>
-      <h1>Oráculo del Tarot Gratis</h1>
-      <p class="subtitle">Lectura de Cartas Personalizada con Inteligencia Artificial 2026</p>
+      <h1>Tarot AI</h1>
+      <p>Tu espacio de guía y autoconocimiento a través de la inteligencia artificial y el tarot</p>
     </header>
 
-    <!-- ─── QUESTION ────────────────────────────────────────── -->
-    <section class="panel" id="question-panel">
-      <div class="panel-title">✦ Tu Pregunta al Universo</div>
-      <div class="question-wrapper">
-        <textarea id="question-input"
-          placeholder="Escribe tu pregunta, intención o simplemente deja que el cosmos te guíe…" rows="3"></textarea>
-      </div>
-    </section>
-
-    <!-- ─── SPREAD SELECTOR ─────────────────────────────────── -->
-    <section class="panel" id="spread-panel">
-      <div class="panel-title">✦ Elige tu Tirada</div>
-      <div class="spread-grid">
-
-        <button class="spread-btn" data-spread="daily">
-          <span class="spread-icon">⭐</span>
-          <span class="spread-name">Carta del Día</span>
-          <span class="spread-count">1 carta</span>
-        </button>
-
-        <button class="spread-btn active" data-spread="three">
-          <span class="spread-icon">🌀</span>
-          <span class="spread-name">Pasado · Presente · Futuro</span>
-          <span class="spread-count">3 cartas</span>
-        </button>
-
-        <button class="spread-btn" data-spread="five">
-          <span class="spread-icon">✦</span>
-          <span class="spread-name">Cruz Celta</span>
-          <span class="spread-count">5 cartas</span>
-        </button>
-
-        <button class="spread-btn" data-spread="celtic">
-          <span class="spread-icon">🌟</span>
-          <span class="spread-name">Cruz Celta Completa</span>
-          <span class="spread-count">10 cartas</span>
-        </button>
-
-      </div>
-    </section>
-
-    <!-- ─── DRAW BUTTON ─────────────────────────────────────── -->
-    <div class="draw-section">
-      <button id="draw-btn">
-        <span class="btn-icon">🃏</span>
-        Tirar las Cartas
-      </button>
-
-    </div>
-
-    <!-- ─── CARD SPREAD AREA ────────────────────────────────── -->
-    <div id="spread-area"></div>
-
-    <!-- ─── CARDS SUMMARY PILLS ─────────────────────────────── -->
-    <div id="cards-summary"></div>
-
-    <div class="mystical-divider">✦ ✦ ✦</div>
-
-    <!-- ─── AI READING ──────────────────────────────────────── -->
-    <section class="panel" id="reading-panel">
-      <div class="reading-header">
-        <div class="reading-icon">🌌</div>
-        <div class="reading-meta">
-          <div class="reading-title">El Oráculo Habla</div>
-          <div id="reading-date" class="reading-date"></div>
+    <!-- ─── SECCIÓN DE LECTURA DE TAROT ─── -->
+    <section class="panel" id="tarot-panel">
+      <div class="panel-title">🎴 Consulta tu Tarot Diario</div>
+      <div class="tarot-content">
+        <p>Selecciona tus cartas para recibir guía personalizada:</p>
+        <!-- Controles de lectura -->
+        <div id="card-selection-area">
+          <!-- Aquí van los elementos interactivos de selección de cartas -->
         </div>
-        <button id="tts-btn" class="tts-btn" style="display: none;" title="Escuchar Lectura">🎙️ Escuchar</button>
-      </div>
-      <div id="reading-text"></div>
-    </section>
-
-    <!-- ─── OFFERINGS & TOOLS ────────────────────────────────── -->
-    <section class="panel" id="offering-panel" style="display: none;">
-      <div class="offering-content">
-        <div class="offering-gift">🎁</div>
-        <h2 class="offering-title">¿Han sido las estrellas generosas hoy?</h2>
-        <p class="offering-desc">
-          Si la guía del oráculo te ha servido de ayuda, considera realizar una pequeña <strong>ofrenda</strong> para
-          que la llama de la sabiduría siga encendida.
-        </p>
-
-        <div class="offering-actions">
-          <a href="https://ko-fi.com/tarotai" target="_blank" class="offering-btn" id="offering-btn">
-            <span class="btn-icon">☕</span>
-            Apoyar el Oráculo (Ko-fi)
-          </a>
-        </div>
-
-        <!-- ─── DYNAMIC RECOMMENDATION ──────────────────────────── -->
-        <div id="dynamic-recommendation" class="dynamic-tool-highlight" style="display: none;">
-          <div class="tools-divider">Sugerencia para esta lectura</div>
-          <div class="dynamic-wrapper">
-            <div class="dynamic-text">
-              <h3 id="dyn-tool-name"></h3>
-              <p id="dyn-tool-desc"></p>
-            </div>
-            <div id="dyn-tool-link" class="tool-card highlight">
-              <div class="tool-icon" id="dyn-tool-icon"></div>
-              <div class="tool-info">
-                <span class="tool-name" id="dyn-tool-card-name"></span>
-                <span class="tool-tag" id="dyn-tool-tag"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        <button id="btn-leer" class="btn-primary">Realizar Lectura</button>
+        <div id="resultado-lectura" style="margin-top: 20px;"></div>
       </div>
     </section>
 
-    <!-- ─── WHATSAPP LEAD CAPTURE (PAGO) - BLOQUEADO HASTA APROBACIÓN ─── -->
-    <section class="panel" id="lead-panel" style="display: none !important;">
+    <!-- ─── WHATSAPP LEAD CAPTURE (PAGO / SUSCRIPCIÓN) ─── -->
+    <section class="panel" id="lead-panel" style="display: none;">
       <div class="panel-title">🌙 Tarot Diario en tu WhatsApp</div>
       <div class="lead-content">
-
-        <!-- Precio destacado -->
-        <div class="lead-price-box">
-          <div class="lead-price-amount">$4.99 <span class="lead-price-period">USD / mes</span></div>
-          <div class="lead-price-desc">Cancelás cuando quieras, sin permanencia.</div>
-        </div>
-
-        <!-- Beneficios -->
-        <ul class="lead-benefits">
-          <li>✦ Una carta del tarot cada mañana</li>
-          <li>✦ Interpretación personalizada por IA</li>
-          <li>✦ Directo a tu WhatsApp, sin apps extra</li>
-          <li>✦ Cancela cuando quieras</li>
-        </ul>
-
-        <div class="lead-form">
-          <div class="lead-input-group">
-            <label for="lead-name">Tu nombre (opcional)</label>
-            <input type="text" id="lead-name" placeholder="María..." autocomplete="given-name" />
+        <p>Recibe tiradas personalizadas, consejos diarios y guía espiritual directamente en tu teléfono.</p>
+        <form id="whatsapp-lead-form">
+          <div class="form-group">
+            <label for="lead-name">Nombre:</label>
+            <input type="text" id="lead-name" placeholder="Tu nombre" required>
           </div>
-          <div class="lead-input-group">
-            <label for="lead-phone">Tu WhatsApp <span style="color:#f87171">*</span></label>
-            <div class="lead-phone-wrap">
-              <select id="lead-country">
-                <option value="+54">+54 ARG</option>
-                <option value="+52">+52 MEX</option>
-                <option value="+34">+34 ESP</option>
-                <option value="+57">+57 COL</option>
-                <option value="+56">+56 CHI</option>
-                <option value="+51">+51 PER</option>
-                <option value="+598">+598 URU</option>
-                <option value="+58">+58 VEN</option>
-                <option value="+1">+1 USA</option>
-              </select>
-              <input type="tel" id="lead-phone" placeholder="9 1155 550000" inputmode="numeric" />
-            </div>
-            <small class="lead-hint">Solo números, sin el 0 ni el 15</small>
+          <div class="form-group">
+            <label for="lead-phone">Número de WhatsApp (con código de país):</label>
+            <input type="tel" id="lead-phone" placeholder="+34600000000" required>
           </div>
-          <div class="lead-consent-row">
-            <input type="checkbox" id="lead-consent" />
-            <label for="lead-consent">
-              Acepto suscribirme por $4.99 USD/mes y recibir mensajes de WhatsApp.
-              Puedo cancelar en cualquier momento.
-            </label>
-          </div>
-          <button id="lead-submit-btn" class="lead-submit-btn">
-            <span id="lead-btn-text">🔮 Suscribirme por $4.99/mes</span>
-          </button>
-          <div id="lead-feedback" style="display:none;"></div>
-        </div>
-        <p class="lead-privacy">🔒 Pago seguro vía PayPal. Cancelá cuando quieras.</p>
+          <button type="submit" class="btn-primary">Suscribirme por WhatsApp</button>
+        </form>
+        <div id="lead-message" style="margin-top: 10px;"></div>
       </div>
     </section>
-
-    <!-- ─── SEO CONTENT LINKS ───────────────────────────────── -->
-    <section class="panel" id="seo-links-panel">
-      <div class="panel-title">✦ Centro de Sabiduría</div>
-      <div class="seo-links-grid">
-        <div class="seo-col">
-          <h3>Significado de los Arcanos</h3>
-          <ul>
-            <li><a href="/significado/el-loco/">El Loco</a></li>
-            <li><a href="/significado/el-mago/">El Mago</a></li>
-            <li><a href="/significado/la-suma-sacerdotisa/">La Suma Sacerdotisa</a></li>
-            <li><a href="/significado/la-luna/">La Luna</a></li>
-            <li><a href="/significado/el-sol/">El Sol</a></li>
-            <li><a href="/significado/el-mundo/">El Mundo</a></li>
-            <li><a href="/significado/la-torre/">La Torre</a></li>
-            <li><a href="/significado/la-muerte/">La Muerte</a></li>
-          </ul>
-          <p><small><a href="/significado/el-mago/">Ver todos los arcanos...</a></small></p>
-        </div>
-        <div class="seo-col">
-          <h3>Guías y Lecturas</h3>
-          <ul>
-            <li><a href="/articulos/oraculo-gratis-respuestas/">Respuestas del Oráculo Gratis</a></li>
-            <li><a href="/articulos/lecturas-de-cartas-online-ia/">Lecturas de Cartas Online (IA)</a></li>
-            <li><a href="/articulos/lecturas-del-tarot-gratis-destino/">Mejorar tu Destino con el Tarot</a></li>
-            <li><a href="/articulos/tarot-del-amor-gratis/">Tarot del Amor Gratis</a></li>
-            <li><a href="/articulos/tirada-de-tarot-gratis-online/">Tirada Interactiva</a></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- ─── FOOTER ──────────────────────────────────────────── -->
-    <div class="seo-text"
-      style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 2rem; padding: 2rem 1rem 0; border-top: 1px solid var(--glass-border);">
-      Descubre tu futuro con nuestro <strong>oráculo gratis</strong> y <strong>lectura de cartas</strong>. El <strong>tarot del oráculo</strong> te ofrece guía espiritual, claridad y respuestas personalizadas con IA.
-    </div>
-
-    
-    <!-- Sección de signos zodiacales — SEO + navegación -->
-    <section id="signos-zodiacales" style="padding:2rem 1rem; max-width:900px; margin:0 auto; text-align:center;">
-        <h2 style="font-family:'Cinzel Decorative',serif; color:var(--gold); font-size:1.3rem; margin-bottom:0.5rem; letter-spacing:0.05em;">
-            Tarot del Día por Signo Zodiacal
-        </h2>
-        <p style="font-family:'EB Garamond',serif; font-style:italic; color:var(--text-muted); margin-bottom:1.5rem;">
-            Lecturas personalizadas y gratuitas para los 12 signos
-        </p>
-        <div style="display:flex; flex-wrap:wrap; gap:0.6rem; justify-content:center;">
-            <a href="/signo/aries/" style="font-family:'Cinzel',serif; font-size:0.8rem; color:var(--text-muted); text-decoration:none; padding:0.5rem 1rem; border:1px solid rgba(201,168,76,0.25); border-radius:25px; transition:all 0.3s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='rgba(201,168,76,0.25)'">♈ Tarot Aries Hoy</a>
-            <a href="/signo/tauro/" style="font-family:'Cinzel',serif; font-size:0.8rem; color:var(--text-muted); text-decoration:none; padding:0.5rem 1rem; border:1px solid rgba(201,168,76,0.25); border-radius:25px; transition:all 0.3s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='rgba(201,168,76,0.25)'">♉ Tarot Tauro Hoy</a>
-            <a href="/signo/geminis/" style="font-family:'Cinzel',serif; font-size:0.8rem; color:var(--text-muted); text-decoration:none; padding:0.5rem 1rem; border:1px solid rgba(201,168,76,0.25); border-radius:25px; transition:all 0.3s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='rgba(201,168,76,0.25)'">♊ Tarot Géminis Hoy</a>
-            <a href="/signo/cancer/" style="font-family:'Cinzel',serif; font-size:0.8rem; color:var(--text-muted); text-decoration:none; padding:0.5rem 1rem; border:1px solid rgba(201,168,76,0.25); border-radius:25px; transition:all 0.3s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='rgba(201,168,76,0.25)'">♋ Tarot Cáncer Hoy</a>
-            <a href="/signo/leo/" style="font-family:'Cinzel',serif; font-size:0.8rem; color:var(--text-muted); text-decoration:none; padding:0.5rem 1rem; border:1px solid rgba(201,168,76,0.25); border-radius:25px; transition:all 0.3s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='rgba(201,168,76,0.25)'">♌ Tarot Leo Hoy</a>
-            <a href="/signo/virgo/" style="font-family:'Cinzel',serif; font-size:0.8rem; color:var(--text-muted); text-decoration:none; padding:0.5rem 1rem; border:1px solid rgba(201,168,76,0.25); border-radius:25px; transition:all 0.3s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='rgba(201,168,76,0.25)'">♍ Tarot Virgo Hoy</a>
-            <a href="/signo/libra/" style="font-family:'Cinzel',serif; font-size:0.8rem; color:var(--text-muted); text-decoration:none; padding:0.5rem 1rem; border:1px solid rgba(201,168,76,0.25); border-radius:25px; transition:all 0.3s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='rgba(201,168,76,0.25)'">♎ Tarot Libra Hoy</a>
-            <a href="/signo/escorpio/" style="font-family:'Cinzel',serif; font-size:0.8rem; color:var(--text-muted); text-decoration:none; padding:0.5rem 1rem; border:1px solid rgba(201,168,76,0.25); border-radius:25px; transition:all 0.3s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='rgba(201,168,76,0.25)'">♏ Tarot Escorpio Hoy</a>
-            <a href="/signo/sagitario/" style="font-family:'Cinzel',serif; font-size:0.8rem; color:var(--text-muted); text-decoration:none; padding:0.5rem 1rem; border:1px solid rgba(201,168,76,0.25); border-radius:25px; transition:all 0.3s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='rgba(201,168,76,0.25)'">♐ Tarot Sagitario Hoy</a>
-            <a href="/signo/capricornio/" style="font-family:'Cinzel',serif; font-size:0.8rem; color:var(--text-muted); text-decoration:none; padding:0.5rem 1rem; border:1px solid rgba(201,168,76,0.25); border-radius:25px; transition:all 0.3s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='rgba(201,168,76,0.25)'">♑ Tarot Capricornio Hoy</a>
-            <a href="/signo/acuario/" style="font-family:'Cinzel',serif; font-size:0.8rem; color:var(--text-muted); text-decoration:none; padding:0.5rem 1rem; border:1px solid rgba(201,168,76,0.25); border-radius:25px; transition:all 0.3s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='rgba(201,168,76,0.25)'">♒ Tarot Acuario Hoy</a>
-            <a href="/signo/piscis/" style="font-family:'Cinzel',serif; font-size:0.8rem; color:var(--text-muted); text-decoration:none; padding:0.5rem 1rem; border:1px solid rgba(201,168,76,0.25); border-radius:25px; transition:all 0.3s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--text-muted)';this.style.borderColor='rgba(201,168,76,0.25)'">♓ Tarot Piscis Hoy</a>
-        </div>
-    </section>
-
-    <footer>
-      ✦ Oráculo del Tarot — Lectura de Cartas Gratis ✦
-    </footer>
 
   </div>
 
-
-
-  <!-- Scripts -->
-  <script src="tarot-data.js"></script>
+  <!-- Scripts principales -->
   <script src="app.js"></script>
-
-  <!-- Script de seguridad para mantener el módulo oculto sin importar app.js -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const panel = document.getElementById("lead-panel");
-      if (panel) {
-        panel.style.setProperty("display", "none", "important");
-        const observer = new MutationObserver(() => {
-          if (panel.style.display !== "none") {
-            panel.style.setProperty("display", "none", "important");
-          }
-        });
-        observer.observe(panel, { attributes: true, attributeFilter: ["style"] });
-      }
-    });
-  </script>
-
-  <!-- Ko-fi Widget -->
-  <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
-  <script>
-    kofiWidgetOverlay.draw('tarotai', {
-      'type': 'floating-chat',
-      'floating-chat.donateButton.text': 'Apóyame',
-      'floating-chat.donateButton.background-color': '#fcbf47',
-      'floating-chat.donateButton.text-color': '#323842'
-    });
-  </script>
-
 </body>
-
 </html>
