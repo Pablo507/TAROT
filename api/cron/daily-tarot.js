@@ -1,10 +1,11 @@
 // api/cron/daily-tarot.js — Vercel Cron Job
-// Se activa automáticamente cada día a las 9 AM (UTC-3 = 12:00 UTC)
-// Configurar en vercel.json: { "crons": [{ "path": "/api/cron/daily-tarot", "schedule": "0 12 * * *" }] }
+// Se activa automáticamente cada día a las 9 AM Uruguay (12:00 UTC)
+// Usa la plantilla aprobada "carta_diaria" para cumplir con las políticas de Meta
 //
-// IMPORTANTE: usa la plantilla "carta_diaria" aprobada en Meta Business Manager.
-// Los mensajes proactivos (sin que el usuario haya escrito en las últimas 24hs)
-// SOLO se pueden enviar como template — texto libre se rechaza con error 131047.
+// Variables de la plantilla:
+//   {{1}} = nombre del suscriptor
+//   {{2}} = nombre de la carta del día
+//   {{3}} = lectura corta generada por Groq (máx ~180 palabras)
 
 import { createClient } from '@supabase/supabase-js'
 import Groq from 'groq-sdk'
@@ -16,11 +17,15 @@ const supabase = createClient(
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
-const WA_TOKEN     = process.env.WHATSAPP_TOKEN        // token de WhatsApp Cloud API
-const WA_PHONE_ID  = process.env.WHATSAPP_PHONE_ID     // ID del número de negocio
-const CRON_SECRET  = process.env.CRON_SECRET           // para proteger el endpoint
+const WA_TOKEN    = process.env.WHATSAPP_TOKEN
+const WA_PHONE_ID = process.env.WHATSAPP_PHONE_ID
+const CRON_SECRET = process.env.CRON_SECRET
 
-// ── Arcanos del día ──────────────────────────────────────────
+// Nombre exacto de la plantilla aprobada en Meta
+const TEMPLATE_NAME = 'carta_diaria'
+const TEMPLATE_LANG = 'es'
+
+// ── Arcanos del día ──────────────────────────────────────────────────────────
 const ARCANOS = [
   "El Loco", "El Mago", "La Sacerdotisa", "La Emperatriz", "El Emperador",
   "El Hierofante", "Los Enamorados", "El Carro", "La Fuerza", "El Ermitaño",
@@ -35,49 +40,37 @@ function cartaDelDia() {
   return ARCANOS[idx]
 }
 
-// ── Generar SOLO la interpretación + consejo con Groq ────────
-// El saludo, el llamado a la lectura gratuita y el pie de "STOP" ahora
-// son texto FIJO de la plantilla de Meta — Groq solo escribe la parte
-// que cambia día a día, y acotada en longitud para no romper la plantilla.
-async function generarInterpretacion(carta) {
-  const prompt = `Escribe la interpretación del tarot para la carta "${carta}" como
-mensaje de WhatsApp diario. Máximo 500 caracteres (estricto, no te pases).
-Debe ser místico, positivo y personal, e incluir un consejo práctico concreto para el día.
-NO uses saludos ("Hola"), NO uses despedidas, NO uses links, NO uses asteriscos dobles (**),
-solo simples (*) para negrita de WhatsApp. Incluí 2-3 emojis relevantes como máximo.
-Responde SOLO el texto, sin comillas ni explicaciones.`
+// ── Generar SOLO el texto de lectura con Groq ────────────────────────────────
+// El saludo y el nombre de la carta ya están en la plantilla como variables.
+// Groq solo genera el cuerpo de la lectura ({{3}}).
+async function generarLectura(carta) {
+  const prompt = `Generá una lectura de tarot diaria breve para la carta "${carta}".
+
+El texto debe:
+- Tener entre 60 y 90 palabras exactamente
+- Ser místico, positivo y personal, como si hablaras directamente al lector
+- Incluir un consejo práctico y concreto para el día de hoy
+- NO mencionar el nombre de la carta al inicio (ya está en el título)
+- NO usar asteriscos ni formato markdown
+- NO incluir saludos ni despedidas
+- Terminar con: "Consejo: [acción concreta de 1 oración]."
+
+Respondé SOLO el texto de la lectura, sin comillas ni explicaciones.`
 
   const resp = await groq.chat.completions.create({
     model: 'llama-3.3-70b-versatile',
     messages: [{ role: 'user', content: prompt }],
     temperature: 0.85,
-    max_tokens: 400,
+    max_tokens: 200,
   })
 
-  let texto = resp.choices[0].message.content.trim()
-
-  // Cinturón de seguridad: la plantilla se cae si la variable es muy larga
-  if (texto.length > 500) texto = texto.slice(0, 497) + '...'
-
-  return texto
+  return resp.choices[0].message.content.trim()
 }
 
-// ── Enviar mensaje por WhatsApp usando la plantilla aprobada ─
-// La plantilla "carta_diaria" debe tener este cuerpo en Meta Business Manager:
-//
-//   Hola {{1}} 🌙
-//
-//   ✦ Tu carta de hoy: *{{2}}*
-//
-//   {{3}}
-//
-//   Para una lectura completa gratuita → https://www.tarotgratis.online
-//
-//   _Responde STOP para dejar de recibir lecturas_
-//
-async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
-  const waPhone = phone.replace('+', '')
-  const saludo = nombre ? nombre.split(' ')[0] : 'amigo/a'
+// ── Enviar usando la plantilla aprobada ──────────────────────────────────────
+async function enviarConPlantilla(phone, nombre, carta, lectura) {
+  const waPhone   = phone.replace('+', '')
+  const firstName = nombre ? nombre.split(' ')[0] : 'Hola'
 
   const body = {
     messaging_product: 'whatsapp',
@@ -85,15 +78,15 @@ async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
     to: waPhone,
     type: 'template',
     template: {
-      name: 'carta_diaria',
-      language: { code: 'es_UY' },
+      name: TEMPLATE_NAME,
+      language: { code: TEMPLATE_LANG },
       components: [
         {
           type: 'body',
           parameters: [
-            { type: 'text', text: saludo },
-            { type: 'text', text: carta },
-            { type: 'text', text: interpretacion }
+            { type: 'text', text: firstName },   // {{1}} = nombre
+            { type: 'text', text: carta },        // {{2}} = carta del día
+            { type: 'text', text: lectura },      // {{3}} = lectura
           ]
         }
       ]
@@ -121,20 +114,22 @@ async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
   return data?.messages?.[0]?.id
 }
 
-// ── Handler principal ────────────────────────────────────────
+// ── Handler principal ────────────────────────────────────────────────────────
 export default async function handler(req, res) {
+  // Seguridad: verificar que viene de Vercel Cron o de nosotros
   const authHeader = req.headers.authorization
   if (authHeader !== `Bearer ${CRON_SECRET}`) {
     return res.status(401).json({ error: 'Unauthorized' })
   }
 
   const startedAt = Date.now()
-  const carta = cartaDelDia()
+  const carta     = cartaDelDia()
   let enviados = 0, fallidos = 0
 
-  console.log(`[Cron] Iniciando. Carta del día: ${carta}`)
+  console.log(`[Cron] Iniciando con plantilla "${TEMPLATE_NAME}". Carta: ${carta}`)
 
   try {
+    // 1. Obtener suscriptores activos
     const { data: subscribers, error } = await supabase
       .from('subscribers')
       .select('id, phone, name, sends_count')
@@ -143,26 +138,41 @@ export default async function handler(req, res) {
     if (error) throw error
     console.log(`[Cron] ${subscribers.length} suscriptores activos`)
 
-    // La interpretación se genera UNA sola vez (misma carta para todos hoy)
-    const interpretacion = await generarInterpretacion(carta)
+    // 2. Generar la lectura del día UNA sola vez (igual para todos)
+    const lectura = await generarLectura(carta)
+    console.log(`[Cron] Lectura generada (${lectura.split(' ').length} palabras)`)
 
+    // 3. Enviar a cada suscriptor con la plantilla
     for (const sub of subscribers) {
       try {
-        const waId = await enviarWhatsApp(sub.phone, sub.name, carta, interpretacion)
+        const waId = await enviarConPlantilla(
+          sub.phone,
+          sub.name,
+          carta,
+          lectura
+        )
 
+        // Log exitoso
         await supabase.from('send_log').insert({
           subscriber_id: sub.id,
           card: carta,
           status: 'sent',
-          wa_message_id: waId
+          wa_message_id: waId,
+          template: TEMPLATE_NAME,
         })
 
+        // Actualizar suscriptor
         await supabase
           .from('subscribers')
-          .update({ last_sent_at: new Date().toISOString(), sends_count: (sub.sends_count || 0) + 1 })
+          .update({
+            last_sent_at: new Date().toISOString(),
+            sends_count: (sub.sends_count || 0) + 1
+          })
           .eq('id', sub.id)
 
         enviados++
+
+        // Rate limit: 100ms entre mensajes (600/min máx en WhatsApp)
         await new Promise(r => setTimeout(r, 100))
 
       } catch (err) {
@@ -172,7 +182,8 @@ export default async function handler(req, res) {
           subscriber_id: sub.id,
           card: carta,
           status: 'failed',
-          error_msg: err.message
+          error_msg: err.message,
+          template: TEMPLATE_NAME,
         })
 
         fallidos++
@@ -185,6 +196,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       ok: true,
       carta,
+      template: TEMPLATE_NAME,
       enviados,
       fallidos,
       duration_s: parseFloat(duration)
