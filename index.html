@@ -235,7 +235,7 @@
     </section>
 
     <!-- ─── WHATSAPP LEAD CAPTURE (PAGO) - BLOQUEADO HASTA APROBACIÓN ─── -->
-    <section class="panel" id="lead-panel" style="display: none !important;">
+    <section class="panel" id="lead-panel" style="display: none;">
       <div class="panel-title">🌙 Tarot Diario en tu WhatsApp</div>
       <div class="lead-content">
 
@@ -366,21 +366,7 @@
   <script src="tarot-data.js"></script>
   <script src="app.js"></script>
 
-  <!-- Script de seguridad para mantener el módulo oculto sin importar app.js -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const panel = document.getElementById("lead-panel");
-      if (panel) {
-        panel.style.setProperty("display", "none", "important");
-        const observer = new MutationObserver(() => {
-          if (panel.style.display !== "none") {
-            panel.style.setProperty("display", "none", "important");
-          }
-        });
-        observer.observe(panel, { attributes: true, attributeFilter: ["style"] });
-      }
-    });
-  </script>
+  <!-- Módulo de suscripción PayPal activado -->
 
   <!-- Ko-fi Widget -->
   <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>

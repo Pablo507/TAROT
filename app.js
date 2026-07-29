@@ -10,7 +10,6 @@ const state = {
   isReading: false,
 };
 
-// ─── DOM REFERENCES ───────────────────────────────────────────
 const $ = id => document.getElementById(id);
 
 const els = {
@@ -52,7 +51,7 @@ function buildStarfield() {
     `;
     frag.appendChild(s);
   }
-  els.starfield.appendChild(frag);
+  if (els.starfield) els.starfield.appendChild(frag);
 }
 
 // ─── SPREAD SELECTION ─────────────────────────────────────────
@@ -64,8 +63,8 @@ function setupSpreadButtons() {
       state.selectedSpread = btn.dataset.spread;
     });
   });
-  // Default active
-  document.querySelector('[data-spread="three"]').classList.add('active');
+  const defaultBtn = document.querySelector('[data-spread="three"]');
+  if (defaultBtn) defaultBtn.classList.add('active');
 }
 
 // ─── FISHER-YATES SHUFFLE ─────────────────────────────────────
@@ -84,14 +83,13 @@ function drawCards() {
   const shuffled = shuffle(TAROT_DECK);
   return shuffled.slice(0, spread.count).map(card => ({
     ...card,
-    reversed: Math.random() < 0.35, // 35% chance reversed
+    reversed: Math.random() < 0.35,
   }));
 }
 
 // ─── BUILD CARD HTML ──────────────────────────────────────────
 function getCardGradient(card) {
   if (!card.colors) return 'linear-gradient(160deg, #1a0040, #0a0020)';
-  // Modern, deep nebula gradient using the card's accent colors
   return `linear-gradient(165deg, ${card.colors[0]}44, #0d0020 40%, ${card.colors[1]}22 90%)`;
 }
 
@@ -135,9 +133,7 @@ function buildCardElement(card, positionLabel, index) {
     <div class="card-glow" style="box-shadow: 0 0 30px ${accentColor}44 inset;"></div>
   `;
 
-  // Click to flip tooltip
   card3d.title = 'Clic para revelar';
-
   slot.appendChild(label);
   slot.appendChild(card3d);
   return slot;
@@ -147,7 +143,6 @@ function buildCardElement(card, positionLabel, index) {
 function flipCard(card3d) {
   card3d.classList.add('flipped');
   if (card3d.classList.contains('reversed')) {
-    // After flip, apply reversed rotation
     const inner = card3d.querySelector('.card-inner');
     setTimeout(() => {
       inner.style.transform = 'rotateY(180deg) rotateZ(180deg)';
@@ -166,12 +161,10 @@ function renderSpread(cards) {
     els.spreadArea.appendChild(slot);
   });
 
-  // Auto-flip with staggered delay
   document.querySelectorAll('.card-3d').forEach((card3d, i) => {
     setTimeout(() => flipCard(card3d), 600 + i * 400);
   });
 
-  // Cards summary pills
   els.cardsSummary.innerHTML = '';
   els.cardsSummary.classList.add('visible');
   cards.forEach(card => {
@@ -182,7 +175,7 @@ function renderSpread(cards) {
   });
 }
 
-// ─── BUILD GEMINI PROMPT ──────────────────────────────────────
+// ─── BUILD PROMPT ─────────────────────────────────────────────
 function buildPrompt(question, cards) {
   const spread = SPREADS[state.selectedSpread];
   const cardDescriptions = cards.map((card, i) => {
@@ -214,81 +207,57 @@ Estructura tu respuesta en texto fluido, poético pero breve. No uses asteriscos
 
 async function getAIReading(question, cards) {
   const prompt = buildPrompt(question, cards);
-  const url = '/api/reading';
-
-  const res = await fetch(url, {
+  const res = await fetch('/api/reading', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt }),
   });
-
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err?.error || `Error ${res.status}`);
   }
-
   const data = await res.json();
   return data.reading || 'La voz del oráculo permanece en silencio…';
 }
 
-// ─── DYNAMIC RECOMMENDATION ENGINE ────────────────────────────
+// ─── DYNAMIC RECOMMENDATION ───────────────────────────────────
 function updateDynamicRecommendation(cards) {
   const counts = { "Bastos": 0, "Copas": 0, "Espadas": 0, "Pentáculos": 0, "Mayor": 0 };
-
   cards.forEach(card => {
-    if (card.arcana === "Mayor") {
-      counts["Mayor"]++;
-    } else if (card.suit) {
-      counts[card.suit]++;
-    }
+    if (card.arcana === "Mayor") counts["Mayor"]++;
+    else if (card.suit) counts[card.suit]++;
   });
-
-  // Find the suit with the highest count
-  let dominant = "Mayor";
-  let max = -1;
-
-  // We check suits first, then override with Mayor if it's very high or tied
+  let dominant = "Mayor", max = -1;
   for (const [suit, count] of Object.entries(counts)) {
-    if (count > max) {
-      max = count;
-      dominant = suit;
-    } else if (count === max && suit === "Mayor") {
-      // Tie-breaker: Major Arcana takes precedence for spiritual importance
-      dominant = "Mayor";
+    if (count > max) { max = count; dominant = suit; }
+    else if (count === max && suit === "Mayor") dominant = "Mayor";
+  }
+  if (typeof ELEMENT_RECOMMENDATIONS !== 'undefined') {
+    const rec = ELEMENT_RECOMMENDATIONS[dominant];
+    if (rec) {
+      if (els.dynToolName) els.dynToolName.textContent = rec.name;
+      if (els.dynToolDesc) els.dynToolDesc.textContent = rec.desc;
+      if (els.dynToolIcon) els.dynToolIcon.textContent = rec.icon;
+      if (els.dynToolCardName) els.dynToolCardName.textContent = rec.name;
+      if (els.dynToolTag) els.dynToolTag.textContent = rec.tag;
     }
   }
-
-  const rec = ELEMENT_RECOMMENDATIONS[dominant];
-
-  // Update UI
-  els.dynToolName.textContent = rec.name;
-  els.dynToolDesc.textContent = rec.desc;
-  els.dynToolIcon.textContent = rec.icon;
-  els.dynToolCardName.textContent = rec.name;
-  els.dynToolTag.textContent = rec.tag;
-
-  // Show the panel
-  els.dynRec.style.display = 'block';
+  if (els.dynRec) els.dynRec.style.display = 'block';
 }
 
-// ─── TYPE-WRITER EFFECT ───────────────────────────────────────
+// ─── TYPEWRITER ───────────────────────────────────────────────
 async function typewriterDisplay(text) {
   els.readingText.innerHTML = '';
   const cursor = document.createElement('span');
   cursor.className = 'cursor';
-
   const container = document.createElement('p');
   container.style.whiteSpace = 'pre-wrap';
   container.style.lineHeight = '1.85';
   els.readingText.appendChild(container);
   container.appendChild(cursor);
-
   let i = 0;
   const chunkSize = 4;
   const delay = 18;
-
   await new Promise(resolve => {
     function write() {
       if (i < text.length) {
@@ -305,11 +274,10 @@ async function typewriterDisplay(text) {
   });
 }
 
-// ─── STRUCTURED DATA (JSON-LD) ────────────────────────────────
+// ─── STRUCTURED DATA ──────────────────────────────────────────
 function updateStructuredData(cards, reading) {
   const spread = SPREADS[state.selectedSpread];
   const now = new Date().toISOString();
-
   const cardFAQs = cards.map(card => ({
     "@type": "Question",
     "name": `¿Qué significa la carta ${card.name} en el Tarot?`,
@@ -318,7 +286,6 @@ function updateStructuredData(cards, reading) {
       "text": `${card.upright} Palabras clave: ${card.keywords.join(', ')}.`
     }
   }));
-
   const schema = {
     "@context": "https://schema.org",
     "@graph": [
@@ -330,17 +297,13 @@ function updateStructuredData(cards, reading) {
         "datePublished": now,
         "articleBody": reading
       },
-      {
-        "@type": "FAQPage",
-        "mainEntity": cardFAQs
-      }
+      { "@type": "FAQPage", "mainEntity": cardFAQs }
     ]
   };
-
-  els.dynamicSchema.textContent = JSON.stringify(schema);
+  if (els.dynamicSchema) els.dynamicSchema.textContent = JSON.stringify(schema);
 }
 
-// ─── SHOW LOADING ─────────────────────────────────────────────
+// ─── LOADING ──────────────────────────────────────────────────
 function showReadingLoading() {
   els.readingPanel.classList.add('visible');
   els.readingText.innerHTML = `
@@ -362,52 +325,40 @@ function showReadingLoading() {
 // ─── MAIN DRAW ACTION ─────────────────────────────────────────
 async function onDraw() {
   if (state.isReading) return;
-
   state.isReading = true;
   els.drawBtn.disabled = true;
   els.drawBtn.classList.add('processing');
   els.drawBtn.innerHTML = `<span class="btn-icon">🔮</span> Consultando...`;
   els.readingPanel.classList.remove('visible');
 
-  // Draw and render cards
   const cards = drawCards();
   state.drawnCards = cards;
   renderSpread(cards);
-
-  // Start checking the stars immediately (shows loading and scrolls down)
   showReadingLoading();
   setTimeout(() => {
     els.readingPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 100);
 
-  // Wait for flip animations and fetch reading in parallel
   const spread = SPREADS[state.selectedSpread];
   const flipDelay = 600 + spread.count * 400 + 600;
-
-  // Start API request right away
   const readingPromise = getAIReading(els.questionInput.value, cards);
-  
-  // Wait for animation delay
   const delayPromise = new Promise(resolve => setTimeout(resolve, flipDelay));
 
   try {
-    // Await both completion
     const [reading] = await Promise.all([readingPromise, delayPromise]);
     await typewriterDisplay(reading);
-
-    // Update Structured Data for SEO Authority
     updateStructuredData(cards, reading);
 
-    // Reveal monetization/offering panel after reading
+    // ── Mostrar panel de suscripción PayPal ──────────────────
     setTimeout(() => {
       updateDynamicRecommendation(cards);
-      els.offeringPanel.style.display = 'block';
-      els.offeringPanel.scrollIntoView({ behavior: 'smooth' });
-      
+      if (els.offeringPanel) {
+        els.offeringPanel.style.display = 'block';
+        els.offeringPanel.scrollIntoView({ behavior: 'smooth' });
+      }
       if (typeof window.activarLeadCapture === 'function') {
         window.activarLeadCapture();
       }
-      
     }, 500);
 
   } catch (err) {
@@ -421,8 +372,6 @@ async function onDraw() {
     els.drawBtn.disabled = false;
     els.drawBtn.classList.remove('processing');
     els.drawBtn.innerHTML = `<span class="btn-icon">🔮</span> Nueva Tirada`;
-    
-    // Show TTS button when reading is done
     if ('speechSynthesis' in window && els.readingText.innerText.length > 0) {
       els.ttsBtn.style.display = 'flex';
       els.ttsBtn.innerHTML = '🎙️ Escuchar';
@@ -431,13 +380,13 @@ async function onDraw() {
   }
 }
 
-// ─── EVENT LISTENERS ──────────────────────────────────────────
+// ─── EVENTS ───────────────────────────────────────────────────
 function setupEvents() {
   els.drawBtn.addEventListener('click', onDraw);
-  els.ttsBtn.addEventListener('click', toggleTTS);
+  if (els.ttsBtn) els.ttsBtn.addEventListener('click', toggleTTS);
 }
 
-// ─── TTS (TEXT-TO-SPEECH) ─────────────────────────────────────
+// ─── TTS ──────────────────────────────────────────────────────
 let currentUtterance = null;
 function toggleTTS() {
   if (state.isReading) return;
@@ -447,31 +396,24 @@ function toggleTTS() {
     els.ttsBtn.innerHTML = '🎙️ Escuchar';
     return;
   }
-  
-  // Clean up HTML tags and asterisks for smooth reading
   const cleanText = els.readingText.innerText.replace(/[*_~`]/g, '');
   if (!cleanText) return;
-
   currentUtterance = new SpeechSynthesisUtterance(cleanText);
-  currentUtterance.lang = 'es-ES'; // Default to Spanish
-  currentUtterance.rate = 0.95; // Slightly slower for mystical tone
+  currentUtterance.lang = 'es-ES';
+  currentUtterance.rate = 0.95;
   currentUtterance.pitch = 0.9;
-  
   currentUtterance.onstart = () => {
     els.ttsBtn.classList.add('playing');
     els.ttsBtn.innerHTML = '⏸️ Detener';
   };
-  
   currentUtterance.onend = () => {
     els.ttsBtn.classList.remove('playing');
     els.ttsBtn.innerHTML = '🎙️ Escuchar';
   };
-  
   currentUtterance.onerror = () => {
     els.ttsBtn.classList.remove('playing');
     els.ttsBtn.innerHTML = '🎙️ Escuchar';
   };
-
   window.speechSynthesis.speak(currentUtterance);
 }
 
@@ -486,37 +428,33 @@ function showOracleIntro() {
   const intro = document.createElement('p');
   intro.className = 'oracle-intro';
   intro.textContent = phrases[Math.floor(Math.random() * phrases.length)];
-  els.spreadArea.appendChild(intro);
+  if (els.spreadArea) els.spreadArea.appendChild(intro);
 }
-
-
 
 // ─── INIT ─────────────────────────────────────────────────────
 function init() {
-  // buildStarfield();
+  buildStarfield();
   setupSpreadButtons();
   setupEvents();
   showOracleIntro();
-
-  // Set current date
   const now = new Date();
-  els.readingDate.textContent = now.toLocaleDateString('es-AR', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-  });
+  if (els.readingDate) {
+    els.readingDate.textContent = now.toLocaleDateString('es-AR', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+  }
 }
 
 document.addEventListener('DOMContentLoaded', init);
 
-// ─── WHATSAPP LEAD CAPTURE ────────────────────────────────────
+// ─── WHATSAPP LEAD CAPTURE — PAYPAL ───────────────────────────
 window.activarLeadCapture = function () {
-  // OCULTO POR RECHAZO DE CUENTA LS
-  
   const panel = document.getElementById('lead-panel');
   if (!panel || panel.dataset.shown) return;
+  panel.style.removeProperty('display');
   panel.style.display = 'block';
   panel.dataset.shown = '1';
   setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
-  
 };
 
 (function initLeadForm() {
@@ -528,14 +466,28 @@ window.activarLeadCapture = function () {
     const urlParams = new URLSearchParams(window.location.search);
     const paypalStatus = urlParams.get('paypal');
     const feedback = document.getElementById('lead-feedback');
+
     if (paypalStatus === 'success') {
-      showFeedback(feedback,
-        '🎉 ¡Suscripción activada! Mañana recibís tu primera lectura por WhatsApp 🔮',
-        'success');
+      // Mostrar el panel y mensaje de éxito
+      const panel = document.getElementById('lead-panel');
+      if (panel) { panel.style.display = 'block'; }
+      if (feedback) {
+        feedback.textContent = '🎉 ¡Suscripción activada! Mañana recibís tu primera lectura por WhatsApp 🔮';
+        feedback.className = 'success';
+        feedback.style.display = 'block';
+      }
     } else if (paypalStatus === 'cancelled') {
-      showFeedback(feedback, 'El pago fue cancelado. Podés intentarlo de nuevo.', 'error');
+      if (feedback) {
+        feedback.textContent = 'El pago fue cancelado. Podés intentarlo de nuevo.';
+        feedback.className = 'error';
+        feedback.style.display = 'block';
+      }
     } else if (paypalStatus === 'error') {
-      showFeedback(feedback, 'Hubo un error. Por favor intentá de nuevo.', 'error');
+      if (feedback) {
+        feedback.textContent = 'Hubo un error. Por favor intentá de nuevo.';
+        feedback.className = 'error';
+        feedback.style.display = 'block';
+      }
     }
 
     btn.addEventListener('click', async function () {
@@ -556,7 +508,6 @@ window.activarLeadCapture = function () {
       showFeedback(feedback, '✦ Conectando con PayPal…', 'success');
 
       try {
-        // Llamar a la API de PayPal
         const resp = await fetch('/api/create-paypal-subscription', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -565,7 +516,6 @@ window.activarLeadCapture = function () {
         const data = await resp.json();
 
         if (resp.ok && data.checkout_url) {
-          // Redirigir a PayPal para aprobar la suscripción
           showFeedback(feedback, '✦ Redirigiendo a PayPal…', 'success');
           setTimeout(() => { window.location.href = data.checkout_url; }, 600);
         } else {
