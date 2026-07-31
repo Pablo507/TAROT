@@ -100,6 +100,9 @@ export default async function handler(req, res) {
         const idToUpdate = subscriber_id || subData.custom_id
 
         if (idToUpdate) {
+          // El .eq('active', false) es clave: si el webhook ya activó a este
+          // suscriptor, este update no encuentra filas y NO se reenvía
+          // el mensaje de bienvenida (evita el duplicado).
           const { data: updatedSub } = await supabase
             .from('subscribers')
             .update({
@@ -110,11 +113,14 @@ export default async function handler(req, res) {
               updated_at: new Date().toISOString(),
             })
             .eq('id', idToUpdate)
+            .eq('active', false)
             .select()
 
           if (updatedSub && updatedSub.length > 0) {
             console.log(`[PayPal Success] Suscriptor ${idToUpdate} activado via redirect`)
             await enviarBienvenida(idToUpdate)
+          } else {
+            console.log(`[PayPal Success] Suscriptor ${idToUpdate} ya estaba activo, no se reenvía bienvenida`)
           }
         }
 
