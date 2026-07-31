@@ -121,6 +121,9 @@ export default async function handler(req, res) {
 }
 
 async function activarSuscriptor(subscriberId, ppSubId) {
+  // El .eq('active', false) es clave: si otro proceso (el redirect de
+  // paypal-success.js) ya activó a este suscriptor, este update no
+  // encuentra filas y NO se reenvía el mensaje de bienvenida.
   const { data: updatedSub } = await supabase
     .from('subscribers')
     .update({
@@ -131,11 +134,14 @@ async function activarSuscriptor(subscriberId, ppSubId) {
       updated_at: new Date().toISOString(),
     })
     .eq('id', subscriberId)
+    .eq('active', false)
     .select()
 
   if (updatedSub && updatedSub.length > 0) {
     console.log(`[PayPal Webhook] Suscriptor ${subscriberId} activado via webhook`)
     await enviarBienvenida(subscriberId)
+  } else {
+    console.log(`[PayPal Webhook] Suscriptor ${subscriberId} ya estaba activo, no se reenvía bienvenida`)
   }
 }
 
