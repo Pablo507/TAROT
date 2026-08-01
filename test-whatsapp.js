@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 const TOKEN = "EAAPCsv7n6zEBSNLzrQkhIV1yyfRtm01rAXx7BcEXiWkOQ50MDp64ZCnwVi4PwOZBTZBbNJSmBhXyGXUqMw133ssMYu6IYZAZCeo2029N0NS1ktBRNCOHS6BfYGu968HLlGtlNfcf6seCmoxUoaRcZBM9rsD1ZCF6A2XgJ6tGewfxzcz3arRoPd0V2wPmPQ7vVxlcwZDZD";
 const PHONE_NUMBER_ID = "1259472747245176";
-const RECIPIENT_PHONE = "59894326501"; // Tu número sin el signo '+'
+const RECIPIENT_PHONE = "59894326501";
 
 async function sendTestMessage() {
   const url = `https://graph.facebook.com/v21.0/${PHONE_NUMBER_ID}/messages`;
@@ -20,7 +20,7 @@ async function sendTestMessage() {
       type: "template",
       template: {
         name: "carta_diaria",
-        language: { code: "es_UY" },
+        language: { code: "es_AR" },
         components: [
           {
             type: "body",
