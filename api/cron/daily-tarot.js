@@ -86,7 +86,7 @@ async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
     type: 'template',
     template: {
       name: 'carta_diaria',
-      language: { code: 'es_UY' },
+      language: { code: 'es' },
       components: [
         {
           type: 'body',
