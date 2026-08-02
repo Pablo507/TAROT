@@ -20,7 +20,7 @@ async function sendTestMessage() {
       type: "template",
       template: {
         name: "carta_diaria",
-        language: { code: "es_AR" },
+        language: { code: "es_UY" },
         components: [
           {
             type: "body",
