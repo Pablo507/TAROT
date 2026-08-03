@@ -1316,3 +1316,150 @@ footer {
   100% { box-shadow: 0 0 0 0 transparent; }
 }
 
+
+
+/* ============================================================
+   MEJORAS MOBILE — Texto más grande, CTA más visible
+   ============================================================ */
+
+/* Texto de la lectura más grande en mobile */
+#reading-text p {
+  font-size: 1.15rem;
+  line-height: 2;
+}
+
+/* Panel de suscripción — borde dorado pulsante al aparecer */
+#lead-panel {
+  border: 2px solid var(--gold) !important;
+  box-shadow: 0 0 30px rgba(184,144,46,0.25), 0 4px 24px rgba(0,0,0,0.08) !important;
+  animation: leadGlow 3s ease-in-out infinite;
+}
+
+@keyframes leadGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(184,144,46,0.2), 0 4px 24px rgba(0,0,0,0.08); }
+  50%       { box-shadow: 0 0 40px rgba(184,144,46,0.45), 0 4px 24px rgba(0,0,0,0.08); }
+}
+
+/* Título del panel de suscripción más grande */
+#lead-panel .panel-title {
+  font-size: 1.3rem !important;
+  letter-spacing: 0.12em;
+  color: var(--gold) !important;
+}
+
+/* Precio más prominente */
+.lead-price-box {
+  background: linear-gradient(135deg, rgba(184,144,46,0.12), rgba(139,94,60,0.08)) !important;
+  border: 1.5px solid var(--gold) !important;
+  padding: 1.2rem !important;
+}
+
+.lead-price-amount {
+  font-size: 2.8rem !important;
+  color: var(--gold) !important;
+  font-weight: 700 !important;
+}
+
+/* Beneficios más grandes */
+.lead-benefits li {
+  font-size: 1rem !important;
+  color: var(--text-primary) !important;
+  font-weight: 500;
+  padding: 2px 0;
+}
+
+/* Labels de formulario más grandes */
+.lead-input-group label {
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+}
+
+/* Inputs más grandes */
+.lead-input-group input[type="text"],
+.lead-input-group input[type="tel"] {
+  font-size: 1.05rem !important;
+  padding: 0.85rem 1rem !important;
+}
+
+/* Checkbox label más grande */
+.lead-consent-row label {
+  font-size: 0.9rem !important;
+  color: var(--text-primary) !important;
+  line-height: 1.6 !important;
+}
+
+/* BOTÓN CTA — grande, visible, con pulso */
+.lead-submit-btn {
+  font-size: 1.15rem !important;
+  padding: 1.1rem !important;
+  border-radius: 14px !important;
+  letter-spacing: 0.03em !important;
+  background: linear-gradient(135deg, #7A5010, #B8902E, #C9A84C) !important;
+  box-shadow: 0 4px 20px rgba(184,144,46,0.4) !important;
+  animation: btnPulse 2.5s ease-in-out infinite !important;
+}
+
+@keyframes btnPulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(184,144,46,0.35); transform: translateY(0); }
+  50%       { box-shadow: 0 8px 30px rgba(184,144,46,0.6); transform: translateY(-2px); }
+}
+
+.lead-submit-btn:disabled {
+  animation: none !important;
+}
+
+/* Feedback más visible */
+#lead-feedback.success {
+  background: rgba(34,197,94,0.18) !important;
+  border: 1px solid rgba(34,197,94,0.45) !important;
+  color: #166534 !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  padding: 0.9rem !important;
+}
+
+#lead-feedback.error {
+  background: rgba(239,68,68,0.12) !important;
+  border: 1px solid rgba(239,68,68,0.35) !important;
+  color: #991b1b !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  padding: 0.9rem !important;
+}
+
+/* ─── MOBILE ESPECÍFICO (max 480px) ────────────────────────── */
+@media (max-width: 480px) {
+  /* Header */
+  .header-title { font-size: clamp(2rem, 8vw, 3rem) !important; }
+  .header-subtitle { font-size: 1rem !important; }
+
+  /* Reading text aún más grande en mobile chico */
+  #reading-text p { font-size: 1.2rem !important; line-height: 2.1 !important; }
+
+  /* Panel titles */
+  .panel-title { font-size: 0.9rem !important; }
+  #lead-panel .panel-title { font-size: 1.2rem !important; }
+
+  /* Precio */
+  .lead-price-amount { font-size: 3rem !important; }
+
+  /* Botón aún más grande */
+  .lead-submit-btn { font-size: 1.2rem !important; padding: 1.2rem !important; }
+
+  /* Beneficios */
+  .lead-benefits li { font-size: 1.05rem !important; }
+
+  /* Spread buttons */
+  .spread-btn { font-size: 0.85rem !important; }
+}
+
+/* Footer mejorado */
+footer {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 2;
+}

@@ -235,7 +235,7 @@
     </section>
 
     <!-- ─── WHATSAPP LEAD CAPTURE (PAGO) - BLOQUEADO HASTA APROBACIÓN ─── -->
-    <section class="panel" id="lead-panel" style="display: none;">
+    <section class="panel" id="lead-panel" style="display: none !important;">
       <div class="panel-title">🌙 Tarot Diario en tu WhatsApp</div>
       <div class="lead-content">
 
@@ -355,7 +355,14 @@
     </section>
 
     <footer>
-      ✦ Oráculo del Tarot — Lectura de Cartas Gratis ✦
+      <div>✦ Oráculo del Tarot — Lectura de Cartas Gratis ✦</div>
+      <div style="margin-top:0.5rem;">
+        ¿Dudas o consultas? Escribinos a
+        <a href="mailto:pablo@proyectosweb.shop"
+           style="color:var(--gold); text-decoration:none; font-style:normal; font-weight:600;">
+          pablo@proyectosweb.shop
+        </a>
+      </div>
     </footer>
 
   </div>
@@ -379,6 +386,20 @@
     });
   </script>
 
+
+  <!-- Módulo de suscripción temporalmente oculto -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const panel = document.getElementById("lead-panel");
+      if (panel) {
+        panel.style.setProperty("display", "none", "important");
+        const observer = new MutationObserver(() => {
+          panel.style.setProperty("display", "none", "important");
+        });
+        observer.observe(panel, { attributes: true, attributeFilter: ["style"] });
+      }
+    });
+  </script>
 </body>
 
 </html>
