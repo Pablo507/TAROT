@@ -1,6 +1,10 @@
 // api/cron/daily-tarot.js — Vercel Cron Job
 // Se activa automáticamente cada día a las 9 AM (UTC-3 = 12:00 UTC)
 // Configurar en vercel.json: { "crons": [{ "path": "/api/cron/daily-tarot", "schedule": "0 12 * * *" }] }
+//
+// IMPORTANTE: usa la plantilla "carta_diaria" aprobada en Meta Business Manager.
+// Los mensajes proactivos (sin que el usuario haya escrito en las últimas 24hs)
+// SOLO se pueden enviar como template — texto libre se rechaza con error 131047.
 
 import { createClient } from '@supabase/supabase-js'
 import Groq from 'groq-sdk'
@@ -32,25 +36,45 @@ function cartaDelDia() {
 }
 
 // ── Generar SOLO la interpretación + consejo con Groq ────────
+// El saludo, el llamado a la lectura gratuita y el pie de "STOP" ahora
+// son texto FIJO de la plantilla de Meta — Groq solo escribe la parte
+// que cambia día a día, y acotada en longitud para no romper la plantilla.
 async function generarInterpretacion(carta) {
-  const prompt = `Escribe la interpretación del tarot para la carta "${carta}" como
-mensaje de WhatsApp diario. Máximo 500 caracteres (estricto, no te pases).
-Debe ser místico, positivo y personal, e incluir un consejo práctico concreto para el día.
-NO uses saludos ("Hola"), NO uses despedidas, NO uses links, NO uses asteriscos dobles (**),
-solo simples (*) para negrita de WhatsApp. Incluí 2-3 emojis relevantes como máximo.
-Responde SOLO el texto, sin comillas ni explicaciones.`
+  const prompt = `Sos un tarotista experto con décadas de experiencia. Generá una lectura de tarot diaria para la carta "${carta}".
+
+ESTRUCTURA OBLIGATORIA — 3 párrafos separados por salto de línea:
+
+Párrafo 1: Una oración poderosa y específica sobre la energía única de ${carta}. Que impacte desde la primera línea.
+
+Párrafo 2: 2-3 oraciones sobre qué significa esta carta HOY para el lector. Usá "vos", "tu energía", "este momento". Sé concreto y personal, nunca genérico.
+
+Párrafo 3: Empezá con "✦ Hoy tu camino es:" y dá una acción concreta y específica para hoy.
+
+REGLAS:
+- Total: entre 100 y 130 palabras
+- Tono místico, cálido, esperanzador
+- NO mencionar el nombre de la carta
+- NO usar asteriscos dobles, ni markdown
+- NO incluir saludos ni despedidas
+- Hablá en segunda persona (vos, tu, te)
+- Podés usar 2-3 emojis relevantes
+
+Respondé SOLO los 3 párrafos, sin títulos ni explicaciones.`
 
   const resp = await groq.chat.completions.create({
     model: 'llama-3.3-70b-versatile',
     messages: [{ role: 'user', content: prompt }],
     temperature: 0.85,
-    max_tokens: 400,
+    max_tokens: 350,
   })
 
-  let texto = resp.choices[0].message.content.trim()
-
-  // Limpieza crítica: elimina saltos de línea que abortan el envío en Meta
-  texto = texto.replace(/\r?\n|\r/g, ' ')
+  let texto = resp.choices[0].message.content
+    .trim()
+    .replace(/\r\n/g, ' ')
+    .replace(/\n/g, ' ')
+    .replace(/\r/g, ' ')
+    .replace(/  +/g, ' ')
+    .trim()
 
   // Cinturón de seguridad: la plantilla se cae si la variable es muy larga
   if (texto.length > 500) texto = texto.slice(0, 497) + '...'
@@ -59,6 +83,18 @@ Responde SOLO el texto, sin comillas ni explicaciones.`
 }
 
 // ── Enviar mensaje por WhatsApp usando la plantilla aprobada ─
+// La plantilla "carta_diaria" debe tener este cuerpo en Meta Business Manager:
+//
+//   Hola {{1}} 🌙
+//
+//   ✦ Tu carta de hoy: *{{2}}*
+//
+//   {{3}}
+//
+//   Para una lectura completa gratuita → https://www.tarotgratis.online
+//
+//   _Responde STOP para dejar de recibir lecturas_
+//
 async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
   const waPhone = phone.replace('+', '')
   const saludo = nombre ? nombre.split(' ')[0] : 'amigo/a'
@@ -70,7 +106,7 @@ async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
     type: 'template',
     template: {
       name: 'carta_diaria',
-      language: { code: 'es_UY' },
+      language: { code: 'es' },
       components: [
         {
           type: 'body',
@@ -127,6 +163,7 @@ export default async function handler(req, res) {
     if (error) throw error
     console.log(`[Cron] ${subscribers.length} suscriptores activos`)
 
+    // La interpretación se genera UNA sola vez (misma carta para todos hoy)
     const interpretacion = await generarInterpretacion(carta)
 
     for (const sub of subscribers) {
