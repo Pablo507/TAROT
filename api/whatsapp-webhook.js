@@ -73,7 +73,11 @@ async function procesarMensaje(msg, metadata) {
 
     // Respuesta de confirmación
     await enviarRespuesta(waPhoneId, msg.from,
-      '✓ Te has dado de baja. No recibirás más lecturas.\n\nSi cambiás de opinión, ingresá al sitio para suscribirte de nuevo. ✦'
+      '✓ Dejaste de recibir las lecturas por WhatsApp.\n\n' +
+      '⚠️ *Importante:* esto NO cancela el cobro mensual de $4.99 en PayPal. ' +
+      'Para dejar de pagar, tenés que cancelar la suscripción vos mismo/a desde tu cuenta de PayPal ' +
+      '(Configuración → Pagos → Pagos automáticos → Oráculo del Tarot → Cancelar).\n\n' +
+      'Si cambiás de opinión sobre las lecturas, ingresá al sitio para reactivarlas. ✦'
     )
     console.log(`[Webhook] Baja procesada: ${phone}`)
     return
