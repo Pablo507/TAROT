@@ -24,12 +24,6 @@ const PAYPAL_BASE = process.env.PAYPAL_MODE === 'sandbox'
   ? 'https://api-m.sandbox.paypal.com'
   : 'https://api-m.paypal.com'
 
-// ── DEBUG TEMPORAL — borrar después de diagnosticar ─────────────────────────
-console.log('[DEBUG] PAYPAL_MODE raw:', JSON.stringify(process.env.PAYPAL_MODE))
-console.log('[DEBUG] PAYPAL_BASE resuelto:', PAYPAL_BASE)
-console.log('[DEBUG] PAYPAL_CLIENT_ID largo:', process.env.PAYPAL_CLIENT_ID?.length, 'primeros 10:', process.env.PAYPAL_CLIENT_ID?.slice(0, 10))
-console.log('[DEBUG] PAYPAL_CLIENT_SECRET largo:', process.env.PAYPAL_CLIENT_SECRET?.length, 'primeros 5:', process.env.PAYPAL_CLIENT_SECRET?.slice(0, 5), 'últimos 5:', process.env.PAYPAL_CLIENT_SECRET?.slice(-5))
-// ── FIN DEBUG ────────────────────────────────────────────────────────────────
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.tarotgratis.online'
 
