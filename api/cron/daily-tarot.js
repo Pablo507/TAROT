@@ -65,7 +65,9 @@ Respondé SOLO los 3 párrafos, sin títulos ni explicaciones.`
     model: 'openai/gpt-oss-20b',
     messages: [{ role: 'user', content: prompt }],
     temperature: 0.85,
-    max_tokens: 350,
+    max_tokens: 900,
+    reasoning_effort: 'low',
+    include_reasoning: false,
   })
 
   let texto = resp.choices[0].message.content
