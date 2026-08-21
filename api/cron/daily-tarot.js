@@ -122,14 +122,6 @@ async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
     }
   }
 
-  // ── DEBUG TEMPORAL ────────────────────────────────────────
-  console.log('[DEBUG] waPhone:', JSON.stringify(waPhone))
-  console.log('[DEBUG] saludo:', JSON.stringify(saludo))
-  console.log('[DEBUG] carta:', JSON.stringify(carta))
-  console.log('[DEBUG] interpretacion largo:', interpretacion?.length, 'valor:', JSON.stringify(interpretacion))
-  console.log('[DEBUG] body completo:', JSON.stringify(body))
-  // ── FIN DEBUG ─────────────────────────────────────────────
-
   const resp = await fetch(
     `https://graph.facebook.com/v21.0/${WA_PHONE_ID}/messages`,
     {
@@ -145,7 +137,6 @@ async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
   const data = await resp.json()
 
   if (!resp.ok) {
-    console.log('[DEBUG] Respuesta completa de error de Meta:', JSON.stringify(data))
     throw new Error(data?.error?.message || `WhatsApp API error ${resp.status}`)
   }
 

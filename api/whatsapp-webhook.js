@@ -42,15 +42,6 @@ export default async function handler(req, res) {
     const changes = entry?.changes?.[0]
     const value   = changes?.value
 
-    // ── DEBUG TEMPORAL: ver eventos de status (delivered/failed) ──────
-    if (value?.statuses) {
-      console.log('[DEBUG-STATUS]', JSON.stringify(value.statuses))
-    }
-    if (!value?.messages && !value?.statuses) {
-      console.log('[DEBUG-RAW] Evento sin messages ni statuses:', JSON.stringify(body))
-    }
-    // ── FIN DEBUG ───────────────────────────────────────────────────────
-
     // Procesar mensajes entrantes
     if (value?.messages) {
       for (const msg of value.messages) {
