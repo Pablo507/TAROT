@@ -78,8 +78,30 @@ Respondé SOLO los 3 párrafos, sin títulos ni explicaciones.`
     .replace(/  +/g, ' ')
     .trim()
 
-  // Cinturón de seguridad: la plantilla se cae si la variable es muy larga
-  if (texto.length > 500) texto = texto.slice(0, 497) + '...'
+  // Cinturón de seguridad: la plantilla se cae si la variable es muy larga.
+  // En vez de cortar a mitad de palabra, buscamos el último punto/cierre de
+  // oración dentro del límite; si no hay uno cerca, cortamos en el último
+  // espacio para no partir una palabra.
+  if (texto.length > 500) {
+    const limite = 480
+    let corte = texto.slice(0, limite)
+
+    const ultimoPunto = Math.max(
+      corte.lastIndexOf('. '),
+      corte.lastIndexOf('.\n'),
+      corte.lastIndexOf('! '),
+      corte.lastIndexOf('? ')
+    )
+
+    if (ultimoPunto > limite * 0.6) {
+      // Hay un cierre de oración razonablemente cerca del límite: cortamos ahí
+      texto = corte.slice(0, ultimoPunto + 1)
+    } else {
+      // Si no, cortamos en el último espacio para no partir una palabra
+      const ultimoEspacio = corte.lastIndexOf(' ')
+      texto = (ultimoEspacio > 0 ? corte.slice(0, ultimoEspacio) : corte).trim() + '…'
+    }
+  }
 
   return texto
 }
