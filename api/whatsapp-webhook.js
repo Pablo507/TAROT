@@ -1,5 +1,5 @@
 // api/whatsapp-webhook.js — recibe mensajes entrantes de WhatsApp
-// Maneja: STOP (baja), confirmaciones, respuestas de usuarios
+// Maneja: STOP (baja), confirmaciones, respuestas de usuarios y notificaciones de estado
 
 import { createClient } from '@supabase/supabase-js'
 
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     return res.status(403).send('Forbidden')
   }
 
-  // ── POST: mensajes entrantes ──────────────────────────────
+  // ── POST: mensajes entrantes y notificaciones ──────────────────────────────
   if (req.method !== 'POST') {
     return res.status(405).send('Method not allowed')
   }
@@ -42,7 +42,16 @@ export default async function handler(req, res) {
     const changes = entry?.changes?.[0]
     const value   = changes?.value
 
-    // Procesar mensajes entrantes
+    // ── Capturar cambios de estado (entregado, leído, fallido) ──
+    if (value?.statuses) {
+      for (const status of value.statuses) {
+        if (status.status === 'failed') {
+          console.error('[Meta Fallo de Entrega]:', JSON.stringify(status.errors, null, 2))
+        }
+      }
+    }
+
+    // ── Procesar mensajes entrantes ──
     if (value?.messages) {
       for (const msg of value.messages) {
         await procesarMensaje(msg, value.metadata)
