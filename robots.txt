@@ -1,12 +1,5 @@
 User-agent: *
 Allow: /
-Allow: /*.js$
-Allow: /*.css$
-Allow: /*.png$
-Allow: /*.jpg$
-Allow: /*.jpeg$
-Allow: /*.svg$
-Allow: /*.ico$
 
 # Directiva canónica de Sitemap
 Sitemap: https://www.tarotgratis.online/sitemap.xml
