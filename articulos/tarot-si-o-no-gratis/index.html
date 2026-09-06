@@ -24,11 +24,82 @@
   <meta property="twitter:image" content="https://www.tarotgratis.online/social-preview.png">
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>">
-  <link rel="stylesheet" href="../index.css">
-  <link rel="stylesheet" href="../significado/article-style.css">
+  
+  <!-- Rutas absolutas para evitar fallos de renderizado -->
+  <link rel="stylesheet" href="/index.css">
+  <link rel="stylesheet" href="/significado/article-style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Estilos críticos para asegurar la paleta mística visual -->
+  <style>
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #f3e5ab;
+      --bg-dark: #0d0b18;
+      --panel-bg: rgba(23, 18, 41, 0.85);
+      --text-color: #e2d9f3;
+      --purple-accent: #a855f7;
+    }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-color);
+      font-family: 'EB Garamond', serif;
+      margin: 0;
+      padding: 0;
+    }
+    .article-page {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+    header h1, h2, h3 {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+    }
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid rgba(201, 168, 76, 0.3);
+      border-radius: 12px;
+      padding: 1.8rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+    .back-link {
+      color: var(--gold);
+      text-decoration: none;
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+    }
+    .draw-btn-link {
+      display: inline-block;
+      background: linear-gradient(135deg, #7e22ce, #a855f7);
+      color: #ffffff !important;
+      padding: 0.9rem 1.8rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-family: 'Cinzel', serif;
+      font-weight: bold;
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+      transition: all 0.3s ease;
+    }
+    .draw-btn-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.7);
+    }
+    .related-links a {
+      color: var(--gold-light);
+      text-decoration: none;
+      margin-right: 15px;
+      border-bottom: 1px dotted var(--gold);
+    }
+    .mystical-divider {
+      color: var(--gold);
+      text-align: center;
+      margin: 1rem 0;
+    }
+  </style>
 
   <!-- Structured Data: WebApplication -->
   <script type="application/ld+json">
@@ -89,14 +160,14 @@
     <header>
       <a href="/" class="back-link">🔮 Volver al Inicio</a>
       <h1>Oráculo Gratis Online</h1>
-      <p style="font-family:'EB Garamond',serif; font-size:1.3rem; opacity:0.8; margin-top:0.5rem;">Mensajes de luz, orientación intuitiva y sabiduría para tu día</p>
+      <p style="font-family:'EB Garamond',serif; font-size:1.3rem; opacity:0.9; margin-top:0.5rem;">Mensajes de luz, orientación intuitiva y sabiduría para tu día</p>
       <div class="mystical-divider">✦ ✦ ✦</div>
     </header>
 
     <!-- CTA principal -->
     <section class="cta-section" style="margin-top:1rem;">
-      <div class="panel" style="background:linear-gradient(135deg,rgba(168,85,247,0.15),rgba(201,168,76,0.15));">
-        <p style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);margin-bottom:1rem;">¿Buscas una respuesta o una guía para tu situación actual?</p>
+      <div class="panel" style="background:linear-gradient(135deg,rgba(168,85,247,0.2),rgba(201,168,76,0.15)); text-align:center;">
+        <p style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);margin-bottom:1.2rem;">¿Buscas una respuesta o una guía para tu situación actual?</p>
         <a href="/" class="draw-btn-link" id="cta-top-btn">🌀 Revelar mi Mensaje del Oráculo Gratis</a>
       </div>
     </section>
@@ -143,13 +214,13 @@
     <article class="panel" style="margin-top:2rem;">
       <h2 style="font-family:'Cinzel',serif;color:var(--gold);font-size:1.8rem;margin-bottom:1.5rem;">Preguntas Frecuentes</h2>
 
-      <div class="faq-item">
-        <h3>¿La consulta al Oráculo es totalmente gratis?</h3>
+      <div class="faq-item" style="margin-bottom:1.2rem;">
+        <h3 style="font-size:1.2rem;">¿La consulta al Oráculo es totalmente gratis?</h3>
         <p>Sí, la tirada del oráculo online es 100% gratuita, sin necesidad de registro ni suscripciones.</p>
       </div>
 
       <div class="faq-item">
-        <h3>¿Puedo consultar el Oráculo todos los días?</h3>
+        <h3 style="font-size:1.2rem;">¿Puedo consultar el Oráculo todos los días?</h3>
         <p>Por supuesto. De hecho, utilizarlo como lectura matutina es una excelente práctica para establecer una intención clara durante el día.</p>
       </div>
     </article>
@@ -167,14 +238,14 @@
 
     <!-- CTA Final -->
     <section class="cta-section">
-      <div class="panel">
+      <div class="panel" style="text-align:center;">
         <h2>¿Listo para escuchar la guía de tu sabiduría interior?</h2>
-        <p>Obtén un mensaje del oráculo claro e instantáneo.</p>
+        <p style="margin-bottom:1.5rem;">Obtén un mensaje del oráculo claro e instantáneo.</p>
         <a href="/" class="draw-btn-link" id="cta-bottom-btn">🌀 Consultar el Oráculo Gratis Ahora</a>
       </div>
     </section>
 
-    <footer>✦ Oráculo Gratis Online — TarotGratis.Online ✦</footer>
+    <footer style="text-align:center; padding: 1.5rem 0; opacity: 0.7; font-family:'Cinzel',serif;">✦ Oráculo Gratis Online — TarotGratis.Online ✦</footer>
   </div>
 </body>
 </html>
