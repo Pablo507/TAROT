@@ -1,5 +1,18 @@
 User-agent: *
 Allow: /
 
-# Directiva canónica de Sitemap
+# Bloqueo de rutas internas y parámetros dinámicos para proteger el crawl budget
+Disallow: /api/
+Disallow: /admin/
+Disallow: /*?*
+
+# Permitir explícitamente recursos para el renderizado del bot
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.webp$
+Allow: /*.svg$
+
+# Ubicación del Sitemap
 Sitemap: https://www.tarotgratis.online/sitemap.xml
