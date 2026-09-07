@@ -266,12 +266,12 @@ header {
 /* ─── SELECTOR DE TIRADAS ────────────────────────────────────── */
 .spread-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
 }
 
 .spread-btn {
-  padding: 1rem;
+  padding: 1rem 0.5rem;
   background: rgba(255,248,232,0.7) !important;
   border: 1px solid var(--glass-border) !important;
   border-radius: 14px;
@@ -280,6 +280,13 @@ header {
   text-align: center;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  min-height: 90px;
+  word-break: break-word;
 }
 
 .spread-btn:hover {
@@ -294,15 +301,28 @@ header {
   box-shadow: 0 0 25px var(--gold-glow) !important;
 }
 
-.spread-icon { font-size: 1.8rem; display: block; margin-bottom: 0.4rem; }
+.spread-icon { 
+  font-size: 1.6rem; 
+  display: block; 
+  line-height: 1;
+}
+
 .spread-name {
   font-family: 'Cinzel', serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--gold-dark);
+  line-height: 1.2;
+  max-width: 100%;
 }
-.spread-count { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+.spread-count { 
+  font-size: 0.7rem; 
+  color: var(--text-muted); 
+  margin-top: 0.1rem;
+  opacity: 0.8;
+}
 
 /* ─── ÁREA DE CARTAS TAROT 3D ────────────────────────────────── */
 #spread-area {
@@ -543,11 +563,186 @@ footer {
 ::-webkit-scrollbar-track { background: #EDE0C4; }
 ::-webkit-scrollbar-thumb { background: #B8902E; border-radius: 4px; }
 
-/* ─── RESPONSIVE (MOBILE) ────────────────────────────────────── */
+/* ════════════════════════════════════════════════════════════════════
+   ─── RESPONSIVE (TABLET & MOBILE) ──────────────────────────
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ─── TABLET (600px - 900px) ────────────────────────────────── */
+@media (max-width: 900px) {
+  .spread-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+  }
+  
+  .spread-btn {
+    min-height: 80px;
+    padding: 0.8rem 0.4rem;
+  }
+  
+  .spread-name {
+    font-size: 0.65rem;
+  }
+  
+  .spread-icon {
+    font-size: 1.4rem;
+  }
+}
+
+/* ─── MÓVIL (hasta 600px) ───────────────────────────────────── */
 @media (max-width: 600px) {
-  :root { --card-w: 140px; --card-h: 240px; }
-  #app, main, .container { padding: 0 1rem 3rem; }
-  .panel, article, section { padding: 1.25rem !important; }
-  .spread-grid { grid-template-columns: repeat(2, 1fr); }
-  #reading-text p { font-size: 1.15rem !important; line-height: 2 !important; }
+  :root { 
+    --card-w: 140px; 
+    --card-h: 240px; 
+  }
+  
+  #app, main, .container { 
+    padding: 0 0.8rem 2.5rem; 
+  }
+  
+  .panel, article, section { 
+    padding: 1.25rem 1rem !important; 
+    border-radius: 16px !important;
+  }
+  
+  .panel-title {
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+  }
+  
+  /* ── BOTONES DE TIRADA EN MÓVIL ── */
+  .spread-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+  
+  .spread-btn {
+    min-height: 70px;
+    padding: 0.6rem 0.3rem;
+    border-radius: 12px;
+  }
+  
+  .spread-icon {
+    font-size: 1.2rem;
+  }
+  
+  .spread-name {
+    font-size: 0.55rem;
+    letter-spacing: 0.05em;
+    line-height: 1.1;
+  }
+  
+  .spread-count {
+    font-size: 0.6rem;
+  }
+  
+  /* ── CARTAS EN MÓVIL ── */
+  #spread-area {
+    gap: 0.8rem;
+    padding: 1rem 0;
+  }
+  
+  .card-position-label {
+    font-size: 0.6rem;
+  }
+  
+  /* ── BOTÓN PRINCIPAL ── */
+  #draw-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.8rem !important;
+  }
+  
+  /* ── LECTURA ── */
+  #reading-text {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  
+  #reading-text .card-section {
+    padding: 0.8rem 1rem;
+  }
+  
+  /* ── PRECIO ── */
+  .lead-price-amount {
+    font-size: 2.2rem !important;
+  }
+  
+  /* ── SEO ── */
+  .seo-links-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  footer {
+    font-size: 0.8rem;
+    padding: 1.5rem 1rem;
+  }
+  
+  .header-glyph {
+    font-size: 2.2rem;
+  }
+  
+  h1 {
+    font-size: clamp(1.6rem, 6vw, 2.4rem);
+  }
+  
+  .subtitle {
+    font-size: 0.95rem;
+  }
+  
+  /* ── WHATSAPP FORM ── */
+  .lead-phone-wrap {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .lead-phone-wrap select {
+    width: 100%;
+  }
+  
+  .lead-phone-wrap input {
+    width: 100%;
+  }
+  
+  .lead-submit-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.8rem !important;
+  }
+  
+  .lead-benefits li {
+    font-size: 0.9rem;
+  }
+  
+  .lead-consent-row label {
+    font-size: 0.75rem;
+  }
+}
+
+/* ─── MÓVIL MUY PEQUEÑO (hasta 380px) ──────────────────────── */
+@media (max-width: 380px) {
+  .spread-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.4rem;
+  }
+  
+  .spread-btn {
+    min-height: 60px;
+    padding: 0.4rem 0.2rem;
+  }
+  
+  .spread-name {
+    font-size: 0.5rem;
+  }
+  
+  .spread-icon {
+    font-size: 1rem;
+  }
+  
+  .spread-count {
+    font-size: 0.5rem;
+  }
+  
+  :root { 
+    --card-w: 120px; 
+    --card-h: 200px; 
+  }
 }
