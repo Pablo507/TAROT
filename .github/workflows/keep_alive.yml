@@ -15,11 +15,10 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          # IMPORTANTE: Cambia "nombre_de_tu_tabla" por el nombre de una tabla real de tu base de datos.
-          # Por ejemplo: "tarot", "usuarios", "cartas", etc.
-          # Usamos -I para pedir solo las cabeceras y ahorrar ancho de banda.
-          # Usamos -w "%{http_code}" para mostrar el código de respuesta en los logs.
-          curl -I -X GET "$SUPABASE_URL/rest/v1/nombre_de_tu_tabla?select=*&limit=1" \
+          # Hacemos una petición a la tabla 'posts', pidiendo solo 1 fila para ahorrar datos.
+          # -I: Solo pide las cabeceras (más rápido).
+          # -w: Muestra el código de estado HTTP al final del log.
+          curl -I -X GET "$SUPABASE_URL/rest/v1/posts?select=*&limit=1" \
           -H "apikey: $SUPABASE_ANON_KEY" \
           -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
           -w "HTTP Status: %{http_code}\n"
