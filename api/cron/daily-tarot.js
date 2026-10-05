@@ -1,13 +1,9 @@
 // api/cron/daily-tarot.js — Vercel Cron Job
-// Se activa automáticamente cada día a las 9 AM (UTC-3 = 12:00 UTC)
-// Configurar en vercel.json: { "crons": [{ "path": "/api/cron/daily-tarot", "schedule": "0 12 * * *" }] }
-//
-// IMPORTANTE: usa la plantilla "carta_diaria" aprobada en Meta Business Manager.
-// Los mensajes proactivos (sin que el usuario haya escrito en las últimas 24hs)
-// SOLO se pueden enviar como template — texto libre se rechaza con error 131047.
 
 import { createClient } from '@supabase/supabase-js'
 import Groq from 'groq-sdk'
+
+export const maxDuration = 60
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -16,11 +12,10 @@ const supabase = createClient(
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
-const WA_TOKEN     = process.env.WHATSAPP_TOKEN        // token de WhatsApp Cloud API
-const WA_PHONE_ID  = process.env.WHATSAPP_PHONE_ID     // ID del número de negocio
-const CRON_SECRET  = process.env.CRON_SECRET           // para proteger el endpoint
+const WA_TOKEN     = process.env.WHATSAPP_TOKEN
+const WA_PHONE_ID  = process.env.WHATSAPP_PHONE_ID
+const CRON_SECRET  = process.env.CRON_SECRET
 
-// ── Arcanos del día ──────────────────────────────────────────
 const ARCANOS = [
   "El Loco", "El Mago", "La Sacerdotisa", "La Emperatriz", "El Emperador",
   "El Hierofante", "Los Enamorados", "El Carro", "La Fuerza", "El Ermitaño",
@@ -35,10 +30,6 @@ function cartaDelDia() {
   return ARCANOS[idx]
 }
 
-// ── Generar SOLO la interpretación + consejo con Groq ────────
-// El saludo, el llamado a la lectura gratuita y el pie de "STOP" ahora
-// son texto FIJO de la plantilla de Meta — Groq solo escribe la parte
-// que cambia día a día, y acotada en longitud para no romper la plantilla.
 async function generarInterpretacion(carta) {
   const prompt = `Sos un tarotista experto con décadas de experiencia. Generá una lectura de tarot diaria para la carta "${carta}".
 
@@ -65,9 +56,7 @@ Respondé SOLO los 3 párrafos, sin títulos ni explicaciones.`
     model: 'openai/gpt-oss-20b',
     messages: [{ role: 'user', content: prompt }],
     temperature: 0.85,
-    max_tokens: 900,
-    reasoning_effort: 'low',
-    include_reasoning: false,
+    max_tokens: 500,
   })
 
   let texto = resp.choices[0].message.content
@@ -78,26 +67,18 @@ Respondé SOLO los 3 párrafos, sin títulos ni explicaciones.`
     .replace(/  +/g, ' ')
     .trim()
 
-  // Cinturón de seguridad: la plantilla se cae si la variable es muy larga.
-  // En vez de cortar a mitad de palabra, buscamos el último punto/cierre de
-  // oración dentro del límite; si no hay uno cerca, cortamos en el último
-  // espacio para no partir una palabra.
   if (texto.length > 500) {
     const limite = 480
     let corte = texto.slice(0, limite)
-
     const ultimoPunto = Math.max(
       corte.lastIndexOf('. '),
       corte.lastIndexOf('.\n'),
       corte.lastIndexOf('! '),
       corte.lastIndexOf('? ')
     )
-
     if (ultimoPunto > limite * 0.6) {
-      // Hay un cierre de oración razonablemente cerca del límite: cortamos ahí
       texto = corte.slice(0, ultimoPunto + 1)
     } else {
-      // Si no, cortamos en el último espacio para no partir una palabra
       const ultimoEspacio = corte.lastIndexOf(' ')
       texto = (ultimoEspacio > 0 ? corte.slice(0, ultimoEspacio) : corte).trim() + '…'
     }
@@ -106,19 +87,6 @@ Respondé SOLO los 3 párrafos, sin títulos ni explicaciones.`
   return texto
 }
 
-// ── Enviar mensaje por WhatsApp usando la plantilla aprobada ─
-// La plantilla "carta_diaria" debe tener este cuerpo en Meta Business Manager:
-//
-//   Hola {{1}} 🌙
-//
-//   ✦ Tu carta de hoy: *{{2}}*
-//
-//   {{3}}
-//
-//   Para una lectura completa gratuita → https://www.tarotgratis.online
-//
-//   _Responde STOP para dejar de recibir lecturas_
-//
 async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
   const waPhone = phone.replace('+', '')
   const saludo = nombre ? nombre.split(' ')[0] : 'amigo/a'
@@ -157,15 +125,12 @@ async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
   )
 
   const data = await resp.json()
-
   if (!resp.ok) {
     throw new Error(data?.error?.message || `WhatsApp API error ${resp.status}`)
   }
-
   return data?.messages?.[0]?.id
 }
 
-// ── Handler principal ────────────────────────────────────────
 export default async function handler(req, res) {
   const authHeader = req.headers.authorization
   if (authHeader !== `Bearer ${CRON_SECRET}`) {
@@ -174,7 +139,7 @@ export default async function handler(req, res) {
 
   const startedAt = Date.now()
   const carta = cartaDelDia()
-  let enviados = 0, fallidos = 0
+  let enviados = 0, fallidos = 0, omitidos = 0
 
   console.log(`[Cron] Iniciando. Carta del día: ${carta}`)
 
@@ -187,11 +152,32 @@ export default async function handler(req, res) {
     if (error) throw error
     console.log(`[Cron] ${subscribers.length} suscriptores activos`)
 
-    // La interpretación se genera UNA sola vez (misma carta para todos hoy)
+    // Obtener fecha actual en formato YYYY-MM-DD (para comparar el día)
+    const hoyInicio = new Date()
+    hoyInicio.setUTCHours(0, 0, 0, 0)
+    const fechaIsoHoy = hoyInicio.toISOString()
+
     const interpretacion = await generarInterpretacion(carta)
 
     for (const sub of subscribers) {
       try {
+        // VALIDACIÓN ANTI-DUPLICADOS: Ver si ya tiene un envío exitoso hoy
+        const { data: yaEnviadoHoy, error: logError } = await supabase
+          .from('send_log')
+          .select('id')
+          .eq('subscriber_id', sub.id)
+          .eq('status', 'sent')
+          .gte('sent_at', fechaIsoHoy)
+          .limit(1)
+
+        if (logError) throw logError
+
+        if (yaEnviadoHoy && yaEnviadoHoy.length > 0) {
+          console.log(`[Cron] Omitido: ${sub.phone} ya recibió su lectura hoy.`)
+          omitidos++
+          continue
+        }
+
         const waId = await enviarWhatsApp(sub.phone, sub.name, carta, interpretacion)
 
         await supabase.from('send_log').insert({
@@ -207,8 +193,6 @@ export default async function handler(req, res) {
           .eq('id', sub.id)
 
         enviados++
-        await new Promise(r => setTimeout(r, 100))
-
       } catch (err) {
         console.error(`[Cron] Error con ${sub.phone}:`, err.message)
 
@@ -224,12 +208,13 @@ export default async function handler(req, res) {
     }
 
     const duration = ((Date.now() - startedAt) / 1000).toFixed(1)
-    console.log(`[Cron] Completado. Enviados: ${enviados}, Fallidos: ${fallidos}, Tiempo: ${duration}s`)
+    console.log(`[Cron] Completado. Enviados: ${enviados}, Omitidos (duplicados): ${omitidos}, Fallidos: ${fallidos}, Tiempo: ${duration}s`)
 
     return res.status(200).json({
       ok: true,
       carta,
       enviados,
+      omitidos,
       fallidos,
       duration_s: parseFloat(duration)
     })
