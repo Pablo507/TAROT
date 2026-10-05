@@ -91,6 +91,10 @@ async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
   const waPhone = phone.replace('+', '')
   const saludo = nombre ? nombre.split(' ')[0] : 'amigo/a'
 
+  if (!interpretacion || interpretacion.trim() === '') {
+    throw new Error('La interpretación está vacía o inválida')
+  }
+
   const body = {
     messaging_product: 'whatsapp',
     recipient_type: 'individual',
@@ -126,6 +130,7 @@ async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
 
   const data = await resp.json()
   if (!resp.ok) {
+    console.error('[WhatsApp] Error detallado de Meta:', JSON.stringify(data))
     throw new Error(data?.error?.message || `WhatsApp API error ${resp.status}`)
   }
   return data?.messages?.[0]?.id
@@ -152,7 +157,6 @@ export default async function handler(req, res) {
     if (error) throw error
     console.log(`[Cron] ${subscribers.length} suscriptores activos`)
 
-    // Obtener fecha actual en formato YYYY-MM-DD (para comparar el día)
     const hoyInicio = new Date()
     hoyInicio.setUTCHours(0, 0, 0, 0)
     const fechaIsoHoy = hoyInicio.toISOString()
@@ -161,7 +165,6 @@ export default async function handler(req, res) {
 
     for (const sub of subscribers) {
       try {
-        // VALIDACIÓN ANTI-DUPLICADOS: Ver si ya tiene un envío exitoso hoy
         const { data: yaEnviadoHoy, error: logError } = await supabase
           .from('send_log')
           .select('id')
