@@ -1,0 +1,24 @@
+name: Keep Supabase Alive
+
+on:
+  schedule:
+    # Se ejecuta cada hora en el minuto 0
+    - cron: '0 * * * *'
+  workflow_dispatch: # Permite ejecutarlo manualmente desde GitHub
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hacer peticion REST a Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          # Hacemos una petición a la tabla 'posts', pidiendo solo 1 fila para ahorrar datos.
+          # -I: Solo pide las cabeceras (más rápido).
+          # -w: Muestra el código de estado HTTP al final del log.
+          curl -I -X GET "$SUPABASE_URL/rest/v1/posts?select=*&limit=1" \
+          -H "apikey: $SUPABASE_ANON_KEY" \
+          -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+          -w "HTTP Status: %{http_code}\n"
