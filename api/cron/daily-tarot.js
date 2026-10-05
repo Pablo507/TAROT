@@ -52,39 +52,50 @@ REGLAS:
 
 Respondé SOLO los 3 párrafos, sin títulos ni explicaciones.`
 
-  const resp = await groq.chat.completions.create({
-    model: 'openai/gpt-oss-20b',
-    messages: [{ role: 'user', content: prompt }],
-    temperature: 0.85,
-    max_tokens: 500,
-  })
+  try {
+    const resp = await groq.chat.completions.create({
+      model: 'openai/gpt-oss-20b',
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.85,
+      max_tokens: 500,
+    })
 
-  let texto = resp.choices[0].message.content
-    .trim()
-    .replace(/\r\n/g, ' ')
-    .replace(/\n/g, ' ')
-    .replace(/\r/g, ' ')
-    .replace(/  +/g, ' ')
-    .trim()
-
-  if (texto.length > 500) {
-    const limite = 480
-    let corte = texto.slice(0, limite)
-    const ultimoPunto = Math.max(
-      corte.lastIndexOf('. '),
-      corte.lastIndexOf('.\n'),
-      corte.lastIndexOf('! '),
-      corte.lastIndexOf('? ')
-    )
-    if (ultimoPunto > limite * 0.6) {
-      texto = corte.slice(0, ultimoPunto + 1)
-    } else {
-      const ultimoEspacio = corte.lastIndexOf(' ')
-      texto = (ultimoEspacio > 0 ? corte.slice(0, ultimoEspacio) : corte).trim() + '…'
+    let texto = resp?.choices?.[0]?.message?.content
+    if (!texto) {
+      throw new Error('Groq devolvió un contenido vacío')
     }
-  }
 
-  return texto
+    texto = texto
+      .trim()
+      .replace(/\r\n/g, ' ')
+      .replace(/\n/g, ' ')
+      .replace(/\r/g, ' ')
+      .replace(/  +/g, ' ')
+      .trim()
+
+    if (texto.length > 500) {
+      const limite = 480
+      let corte = texto.slice(0, limite)
+      const ultimoPunto = Math.max(
+        corte.lastIndexOf('. '),
+        corte.lastIndexOf('.\n'),
+        corte.lastIndexOf('! '),
+        corte.lastIndexOf('? ')
+      )
+      if (ultimoPunto > limite * 0.6) {
+        texto = corte.slice(0, ultimoPunto + 1)
+      } else {
+        const ultimoEspacio = corte.lastIndexOf(' ')
+        texto = (ultimoEspacio > 0 ? corte.slice(0, ultimoEspacio) : corte).trim() + '…'
+      }
+    }
+
+    return texto
+  } catch (err) {
+    console.error('[Groq] Error generando interpretación, usando texto por defecto:', err.message)
+    // Texto de respaldo garantizado por si la API de IA falla puntualmente
+    return `Hoy la energía te invita a mirar hacia adentro y conectar con tu intuición más profunda para transformar lo que ya no te sirve. Es un momento clave para soltar viejas estructuras y abrirte con confianza a nuevas oportunidades que están por llegar. ✦ Hoy tu camino es: tomate unos minutos en silencio para respirar consciente y definir una sola prioridad clara para avanzar.`
+  }
 }
 
 async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
