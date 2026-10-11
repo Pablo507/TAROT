@@ -53,57 +53,33 @@ REGLAS:
 Respondé SOLO los 3 párrafos, sin títulos ni explicaciones.`
 
   try {
+    // Usamos el modelo general de entrada de Groq
     const resp = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile', // Modelo actual, estable y plenamente operativo en Groq
+      model: 'gemma2-9b-it', // Modelo alternativo súper estable en Groq
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.85,
       max_tokens: 500,
     })
 
     let texto = resp?.choices?.[0]?.message?.content
-    if (!texto) {
-      throw new Error('Groq devolvió un contenido vacío')
-    }
+    if (!texto) throw new Error('Contenido vacío')
 
-    texto = texto
+    return texto
       .trim()
       .replace(/\r\n/g, ' ')
       .replace(/\n/g, ' ')
-      .replace(/\r/g, ' ')
       .replace(/  +/g, ' ')
       .trim()
-
-    if (texto.length > 500) {
-      const limite = 480
-      let corte = texto.slice(0, limite)
-      const ultimoPunto = Math.max(
-        corte.lastIndexOf('. '),
-        corte.lastIndexOf('.\n'),
-        corte.lastIndexOf('! '),
-        corte.lastIndexOf('? ')
-      )
-      if (ultimoPunto > limite * 0.6) {
-        texto = corte.slice(0, ultimoPunto + 1)
-      } else {
-        const ultimoEspacio = corte.lastIndexOf(' ')
-        texto = (ultimoEspacio > 0 ? corte.slice(0, ultimoEspacio) : corte).trim() + '…'
-      }
-    }
-
-    return texto
   } catch (err) {
-    console.error('[Groq] Error generando interpretación, usando texto por defecto:', err.message)
-    return `Hoy la energía te invita a mirar hacia adentro y conectar con tu intuición más profunda para transformar lo que ya no te sirve. Es un momento clave para soltar viejas estructuras y abrirte con confianza a nuevas oportunidades que están por llegar. ✦ Hoy tu camino es: tomate unos minutos en silencio para respirar consciente y definir una sola prioridad clara para avanzar.`
+    console.error('[Groq Error]:', err.message)
+    // Texto garantizado único por fecha si la IA falla
+    return `Hoy la energía de ${carta} te invita a confiar plenamente en tus pasos y abrirte a nuevas experiencias. Es un momento clave para soltar el miedo y avanzar con convicción hacia tus metas. ✦ Hoy tu camino es: tomate unos minutos para conectar con lo que realmente deseas y da el primer paso sin dudar.`
   }
 }
 
 async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
   const waPhone = phone.replace('+', '')
   const saludo = nombre ? nombre.split(' ')[0] : 'amigo/a'
-
-  if (!interpretacion || interpretacion.trim() === '') {
-    throw new Error('La interpretación está vacía o inválida')
-  }
 
   const body = {
     messaging_product: 'whatsapp',
@@ -140,7 +116,6 @@ async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
 
   const data = await resp.json()
   if (!resp.ok) {
-    console.error('[WhatsApp] Error detallado de Meta:', JSON.stringify(data))
     throw new Error(data?.error?.message || `WhatsApp API error ${resp.status}`)
   }
   return data?.messages?.[0]?.id
@@ -148,7 +123,8 @@ async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
 
 export default async function handler(req, res) {
   const authHeader = req.headers.authorization
-  if (authHeader !== `Bearer ${CRON_SECRET}`) {
+  const queryToken = req.query?.token
+  if (authHeader !== `Bearer ${CRON_SECRET}` && queryToken !== CRON_SECRET) {
     return res.status(401).json({ error: 'Unauthorized' })
   }
 
@@ -165,7 +141,6 @@ export default async function handler(req, res) {
       .eq('active', true)
 
     if (error) throw error
-    console.log(`[Cron] ${subscribers.length} suscriptores activos`)
 
     const hoyInicio = new Date()
     hoyInicio.setUTCHours(0, 0, 0, 0)
@@ -220,16 +195,13 @@ export default async function handler(req, res) {
       }
     }
 
-    const duration = ((Date.now() - startedAt) / 1000).toFixed(1)
-    console.log(`[Cron] Completado. Enviados: ${enviados}, Omitidos (duplicados): ${omitidos}, Fallidos: ${fallidos}, Tiempo: ${duration}s`)
-
     return res.status(200).json({
       ok: true,
       carta,
       enviados,
       omitidos,
       fallidos,
-      duration_s: parseFloat(duration)
+      duration_s: parseFloat(((Date.now() - startedAt) / 1000).toFixed(1))
     })
 
   } catch (err) {
