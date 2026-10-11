@@ -54,7 +54,7 @@ Respondé SOLO los 3 párrafos, sin títulos ni explicaciones.`
 
   try {
     const resp = await groq.chat.completions.create({
-      model: 'llama-3.1-8b-instant',
+      model: 'llama3-8b-8192', // Modelo estándar y plenamente operativo en Groq
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.85,
       max_tokens: 500,
