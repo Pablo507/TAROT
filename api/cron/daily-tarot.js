@@ -54,7 +54,7 @@ Respondé SOLO los 3 párrafos, sin títulos ni explicaciones.`
 
   try {
     const resp = await groq.chat.completions.create({
-      model: 'openai/gpt-oss-20b',
+      model: 'llama-3.1-8b-instant',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.85,
       max_tokens: 500,
@@ -93,7 +93,6 @@ Respondé SOLO los 3 párrafos, sin títulos ni explicaciones.`
     return texto
   } catch (err) {
     console.error('[Groq] Error generando interpretación, usando texto por defecto:', err.message)
-    // Texto de respaldo garantizado por si la API de IA falla puntualmente
     return `Hoy la energía te invita a mirar hacia adentro y conectar con tu intuición más profunda para transformar lo que ya no te sirve. Es un momento clave para soltar viejas estructuras y abrirte con confianza a nuevas oportunidades que están por llegar. ✦ Hoy tu camino es: tomate unos minutos en silencio para respirar consciente y definir una sola prioridad clara para avanzar.`
   }
 }
