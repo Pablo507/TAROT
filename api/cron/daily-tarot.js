@@ -57,7 +57,7 @@ function generarInterpretacion(carta) {
 }
 
 async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
-  const waPhone = phone.replace('+', '')
+  const waPhone = String(phone).replace(/\+/g, '').trim()
   const saludo = nombre ? nombre.split(' ')[0] : 'amigo/a'
 
   const body = {
@@ -101,25 +101,26 @@ async function enviarWhatsApp(phone, nombre, carta, interpretacion) {
 }
 
 export default async function handler(req, res) {
-  const authHeader = req.headers.authorization
-  const queryToken = req.query?.token
-  if (authHeader !== `Bearer ${CRON_SECRET}` && queryToken !== CRON_SECRET) {
-    return res.status(401).json({ error: 'Unauthorized' })
-  }
-
-  const startedAt = Date.now()
-  const carta = cartaDelDia()
-  let enviados = 0, fallidos = 0, omitidos = 0
-
-  console.log(`[Cron] Iniciando. Carta del día: ${carta}`)
-
   try {
-    const { data: subscribers, error } = await supabase
+    const authHeader = req.headers.authorization
+    const queryToken = req.query?.token
+
+    if (authHeader !== `Bearer ${CRON_SECRET}` && queryToken !== CRON_SECRET) {
+      return res.status(401).json({ error: 'Unauthorized' })
+    }
+
+    const startedAt = Date.now()
+    const carta = cartaDelDia()
+    let enviados = 0, fallidos = 0, omitidos = 0
+
+    console.log(`[Cron] Iniciando. Carta del día: ${carta}`)
+
+    const { data: subscribers, error: subError } = await supabase
       .from('subscribers')
       .select('id, phone, name, sends_count')
       .eq('active', true)
 
-    if (error) throw error
+    if (subError) throw new Error(`Supabase subscribers error: ${subError.message}`)
 
     const hoyInicio = new Date()
     hoyInicio.setUTCHours(0, 0, 0, 0)
@@ -127,7 +128,7 @@ export default async function handler(req, res) {
 
     const interpretacion = generarInterpretacion(carta)
 
-    for (const sub of subscribers) {
+    for (const sub of (subscribers || [])) {
       try {
         const { data: yaEnviadoHoy, error: logError } = await supabase
           .from('send_log')
@@ -137,7 +138,7 @@ export default async function handler(req, res) {
           .gte('sent_at', fechaIsoHoy)
           .limit(1)
 
-        if (logError) throw logError
+        if (logError) throw new Error(`Supabase log check error: ${logError.message}`)
 
         if (yaEnviadoHoy && yaEnviadoHoy.length > 0) {
           console.log(`[Cron] Omitido: ${sub.phone} ya recibió su lectura hoy.`)
@@ -161,6 +162,30 @@ export default async function handler(req, res) {
 
         enviados++
       } catch (err) {
-        console.error(`[Cron] Error con ${sub.phone}:`, err.message)
+        console.error(`[Cron] Error con suscriptor ${sub.id}:`, err.message)
 
-        await supabase.from('send_log
+        await supabase.from('send_log').insert({
+          subscriber_id: sub.id,
+          card: carta,
+          status: 'failed',
+          error_msg: err.message
+        })
+
+        fallidos++
+      }
+    }
+
+    return res.status(200).json({
+      ok: true,
+      carta,
+      enviados,
+      omitidos,
+      fallidos,
+      duration_s: parseFloat(((Date.now() - startedAt) / 1000).toFixed(1))
+    })
+
+  } catch (err) {
+    console.error('[Cron Error Fatal]:', err)
+    return res.status(500).json({ error: err.message || 'Internal Server Error' })
+  }
+}
